@@ -1,0 +1,51 @@
+Public Function ExtractNumber(rCell As Range, Optional Take_decimal As Boolean, Optional Take_negative As Boolean) As Double
+
+'this function extracts any integer value within a string of text
+
+Dim iCount As Integer, i As Integer, iLoop As Integer
+Dim sText As String, strNeg As String, strDec As String
+Dim lNum As String
+Dim vVal, vVal2
+
+    sText = rCell
+    
+    If Take_decimal = True And Take_negative = True Then
+        strNeg = "-" 'Negative Sign MUST be before 1st number.
+        strDec = "."
+    ElseIf Take_decimal = True And Take_negative = False Then
+        strNeg = vbNullString
+        strDec = "."
+    ElseIf Take_decimal = False And Take_negative = True Then
+        strNeg = "-"
+        strDec = vbNullString
+    End If
+    
+    iLoop = Len(sText)
+    
+    For iCount = iLoop To 1 Step -1
+
+        vVal = Mid(sText, iCount, 1)
+        
+        If IsNumeric(vVal) Or vVal = strNeg Or vVal = strDec Then
+            i = i + 1
+            lNum = Mid(sText, iCount, 1) & lNum
+            
+                If IsNumeric(lNum) Then
+                    If CDbl(lNum) < 0 Then
+                        Exit For
+                    End If
+                Else
+                    lNum = Replace(lNum, Left(lNum, 1), "", , 1)
+                End If
+                
+        End If
+            
+        If i = 1 And lNum <> vbNullString Then
+            lNum = CDbl(Mid(lNum, 1, 1))
+        End If
+    
+    Next iCount
+            
+    ExtractNumber = CDbl(lNum)
+
+End Function

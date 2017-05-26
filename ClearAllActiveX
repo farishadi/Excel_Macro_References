@@ -1,0 +1,12 @@
+Public Sub clearAll()
+
+'this Sub clears all of the ActiveX objects present on the sheet
+
+For i = 1 To 8
+    ThisWorkbook.Sheets("Macro").OLEObjects("TextBox" & i).Object.Value = ""
+    If i <= 5 Then
+        ThisWorkbook.Sheets("Macro").OLEObjects("ComboBox" & i).Object.Value = ""
+    End If
+Next i
+
+End Sub

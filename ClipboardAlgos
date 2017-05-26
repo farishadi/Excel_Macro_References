@@ -1,0 +1,7 @@
+Dim clipboard As New MSForms.DataObject
+
+clipboard.SetText ThisWorkbook.Sheets("Macro").TextBox1.Value
+clipboard.PutInClipboard
+
+clipboard.GetFromClipboard
+strcontents = clipboard.GetText

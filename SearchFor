@@ -1,0 +1,80 @@
+'************************************************************************************************************************************
+'******************************************************SIMPLE SEARCH FUNCTION********************************************************
+'************************************************************************************************************************************
+Public Function searchFor(ByVal mytext As String, Optional iSwitchInd As Integer = 1, Optional startRow As Integer, Optional endRow As Integer, Optional targCol As Integer) As String
+
+'this function looks for the first instance of the provided mytext in the activesheet
+'function allows approximate matching via flipping the iSwitchInd switch
+'(1 for full match, 2 for partial matching, 3 for date searches, 4 for single column searching)
+
+If iSwitchInd = 1 Then
+    Set found = ActiveSheet.UsedRange.Find(What:=mytext, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
+ElseIf iSwitchInd = 2 Then
+    Set found = ActiveSheet.UsedRange.Find(What:=mytext, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlRows, MatchCase:=False)
+ElseIf iSwitchInd = 3 Then
+    Set found = ActiveSheet.UsedRange.Find(What:=mytext, LookIn:=xlFormulas, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
+ElseIf iSwitchInd = 4 Then
+    Set found = ActiveSheet.Range(Cells(startRow, targCol), Cells(endRow, targCol)).Find(What:=mytext, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
+End If
+
+'if found something
+If Not found Is Nothing Then
+    searchFor = found.Address
+Else
+    searchFor = "X"
+End If
+
+End Function
+
+'************************************************************************************************************************************
+'***********************************************SEARCH FUNCTION WITH ERROR HANDLER***************************************************
+'************************************************************************************************************************************
+Public Function searchFor(ByVal mytext As String, Optional iSwitchInd As Integer = 1, Optional startRow As Integer, Optional endRow As Integer, Optional targCol As Integer) As String
+
+'this function looks for the first instance of the provided mytext in the activesheet
+'function allows approximate matching via flipping the iSwitchInd switch
+'(1 for full match, 2 for partial matching, 3 for date searches, 4 for single column searching)
+
+Dim inputCells As Range
+
+If iSwitchInd = 1 Then
+    Set found = ActiveSheet.UsedRange.Find(What:=mytext, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
+ElseIf iSwitchInd = 2 Then
+    Set found = ActiveSheet.UsedRange.Find(What:=mytext, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlRows, MatchCase:=False)
+ElseIf iSwitchInd = 3 Then
+    Set found = ActiveSheet.UsedRange.Find(What:=mytext, LookIn:=xlFormulas, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
+ElseIf iSwitchInd = 4 Then
+    Set found = ActiveSheet.Range(Cells(startRow, targCol), Cells(endRow, targCol)).Find(What:=mytext, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
+End If
+
+'if found something
+If Not found Is Nothing Then
+    searchFor = found.Address
+    
+'else if value not found,
+Else
+Redo:
+    On Error GoTo errHandler
+    Set inputCells = Application.InputBox(prompt:="Cell '" & mytext & "' is not found. Please select the '" & mytext & "' header cell if it exists under another name. Click 'Cancel' to exit.", Title:="Select Header Cells", Type:=8)
+    
+    If inputCells.Count > 1 Then
+        MsgBox "You have selected multiple cells or a whole column/row range. Please reselect only one cell that contains the '" & mytext & "' value."
+        GoTo Redo
+    Else
+        searchFor = inputCells.Address
+        inputCells.Value = mytext
+    End If
+End If
+Exit Function
+
+errHandler:
+Err.Number = 0
+confirmEnd = MsgBox("Confirm Cancel cell header selection? Macro cannot proceed without the correct cell header mappings.", vbYesNo, "ATTENTION")
+If confirmEnd = vbYes Then
+    MsgBox "No values selected. Macro cannot proceed without the correct cell header mappings and will now end. Please re-run macro to try again."
+    End
+Else
+    Resume Redo
+End If
+
+End Function

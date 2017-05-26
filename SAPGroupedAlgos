@@ -1,0 +1,149 @@
+'SAPPull & algos variables
+Public SapGuiAuto As Object
+Public applications As Object
+Public Connection As Object
+Public session As Object
+
+'checkAll variables
+Public sCheck As String
+
+'preSwitch variables
+Public sUnavailWBooks As String
+Public sUFormCap As String
+
+Public Sub SAPPull()
+
+SAPCheck = MsgBox("You must be logged into SAP to run this macro, failure to do so will produce an error with the macro. Are you logged in to SAP?", vbYesNo, "SAP Login Check")
+If SAPCheck = vbNo Then
+    MsgBox "Please log into SAP and try to run the macro again."
+    End
+End If
+
+'Connect to SAP
+Set SapGuiAuto = GetObject("SAPGUI")
+Set applications = SapGuiAuto.GetScriptingEngine
+
+'Check existance of SAP logon screen first before proceed
+If applications.Children.Count > 0 Then
+    Set Connection = applications.Children(0)
+    
+    'SAP is available, run checks before proceeding
+    Call checkAll
+    
+Else
+    MsgBox "This macro requires access to the SAP system and no SAP Logon detected. Please logon to SAP system and try again!"
+    End
+End If
+
+Set session = Connection.Children(0)
+   
+If Not IsObject(applications) Then
+    Set SapGuiAuto = GetObject("SAPGUI")
+    Set applications = SapGuiAuto.GetScriptingEngine
+End If
+
+If Not IsObject(Connection) Then
+    Set Connection = applications.Children(0)
+End If
+
+If Not IsObject(session) Then
+    Set session = Connection.Children(0)
+End If
+
+If IsObject(WScript) Then
+    WScript.ConnectObject session, "on"
+    WScript.ConnectObject applications, "on"
+End If
+
+'suppress "microsoft office excel is waiting for another application to complete an ole action" error
+Application.DisplayAlerts = False
+
+'*************************************************************************************************
+'SAP Script
+'*************************************************************************************************
+
+'go back to home screen
+session.findById("wnd[0]/tbar[0]/btn[12]").press
+
+'unsuppress alerts
+Application.DisplayAlerts = True
+
+Call preSwitch
+
+End Sub
+
+Public Sub checkAll()
+
+Dim aShLocs(0 To 1) As String
+aShLocs(0) = "C4"
+aShLocs(1) = "G4"
+
+Dim aShVars(0 To 1) As String
+aShVars(0) = "X"
+aShVars(1) = "Y"
+
+'catches empty workbook selections
+For i = 0 To 1
+        If ThisWorkbook.Sheets("Macro").Range(aShLocs(i)).Value = "" Then
+            MsgBox "Please select the " & aShVars(i) & " Workbook first by clicking the " & aShVars(i) & """ Browse"" Button before running the macro!"
+            End
+        End If
+        
+        If ThisWorkbook.Sheets("Macro").OLEObjects("ComboBox" & i - 2).Object.Value = "" Then
+            MsgBox "Please select the Worksheet for " & aShVars(i) & " Workbook first before running the macro!"
+            End
+        End If
+        
+    End If
+Next i
+
+'check if macro location contains workbook name for SAP Pull. Else delete the old one, run the current.
+Dim sFName(0 To 1) As String
+sFName(0) = "A_" & Format(dEndDate, "mmddyyyy")
+sFName(1) = "B_" & Format(dEndDate, "mmddyyyy")
+
+'check if previous run is in folder or not
+For i = 0 To UBound(sFName)
+    sCheck = Dir(ThisWorkbook.Path & "\" & sFName(i) & "*")
+    If sCheck <> "" Then
+        Kill ThisWorkbook.Path & "\" & sCheck
+    End If
+Next i
+
+End Sub
+
+Public Sub preSwitch()
+
+'check if macro location contains workbook name for SAP Pull. If does not exist prompt confirmation
+Dim aWBNames(0 To 4) As String
+aWBNames(0) = "A_" & Format(dEndDate, "mmddyyyy")
+aWBNames(1) = "B_" & Format(dEndDate, "mmddyyyy")
+
+'for each unavailable workbook, push name into variable container to display on userform
+sCurrWBPath = ThisWorkbook.Path
+'i controls looping through workbook names array
+For i = 0 To UBound(aWBNames)
+    If Dir(sCurrWBPath & "\" & aWBNames(i) & "*") = "" Then
+        If sUnavailWBooks <> "" Then
+            sUnavailWBooks = sUnavailWBooks & ", " & aWBNames(i)
+        Else
+            sUnavailWBooks = aWBNames(i)
+        End If
+    End If
+Next i
+
+'assign caption for userform
+If sUnavailWBooks <> "" Then
+    sUFormCap = "There are workbooks (" & sUnavailWBooks & ") that are missing from the SAP pull. " & _
+                "Do you wish to disregard the missing workbooks (and ignore the algorithms that affect them) and continue?"
+Else
+    sUFormCap = "Perfect SAP Pull! There are no workbooks missing. Do you wish to continue with the macro?"
+End If
+
+With UserForm1
+    .Label1.Caption = sUFormCap
+    .Label2.Caption = dEndDate
+    .Show
+End With
+
+End Sub

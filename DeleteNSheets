@@ -1,0 +1,13 @@
+Public Sub DeleteSheets(Optional iShCnt As Integer = 1)
+
+'this function clears all of the sheets after the variable amount
+
+If Sheets.Count > iShCnt Then
+    For i = Sheets.Count To iShCnt + 1 Step -1
+        Application.DisplayAlerts = False
+        Sheets(i).Delete
+        Application.DisplayAlerts = True
+    Next i
+End If
+
+End Sub

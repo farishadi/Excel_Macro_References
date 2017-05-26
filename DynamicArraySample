@@ -1,0 +1,14 @@
+Public Sub test1()
+
+Dim a() As String
+ReDim Preserve a(0 To 0) As String
+
+Count = 0
+
+For i = 0 To 10
+    a(Count) = i
+    Count = Count + 1
+    ReDim Preserve a(0 To Count) As String
+Next i
+
+End Sub  

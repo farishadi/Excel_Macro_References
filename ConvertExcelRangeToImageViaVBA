@@ -1,0 +1,83 @@
+'CONVERTING EXCEL RANGE TO IMAGE
+
+'Const saveSceenshotTo As String = "C:\Users\yourUserName\Desktop\" ' change path to where you want to save
+'Const saveScreenshotTo As String = "C:\Users\ChekassF\Downloads\Macros\Macro Project 3 - Inventory Control (Warehouse, Azmir Khan)\Prototypes"
+Const pictureFormat As String = ".jpg" ' change file extension
+
+Private Declare Function OpenClipboard Lib "user32" (ByVal hwnd As Long) As Long
+Private Declare Function GetClipboardData Lib "user32" (ByVal wFormat As Integer) As Long
+Private Declare Function CloseClipboard Lib "user32" () As Long
+Private Declare Function OleCreatePictureIndirect Lib "olepro32.dll" (PicDesc As uPicDesc, RefIID As GUID, ByVal fPictureOwnsHandle As Long, IPic As IPicture) As Long
+
+Private Type GUID
+    Data1 As Long
+    Data2 As Integer
+    Data3 As Integer
+    Data4(0 To 7) As Byte
+End Type
+
+Private Type uPicDesc
+    Size As Long
+    Type As Long
+    hPic As Long
+    hPal As Long
+End Type
+
+Private Const CF_BITMAP = 2
+Private Const PICTYPE_BITMAP = 1
+
+' run this sub to export pictures
+Public Function ExportPicturesToFiles(ByVal wbPath As String) As String
+'Public Sub ExportPicturesToFiles(ByVal wbPath As String)
+Dim saveScreenshotTo As String
+
+saveScreenshotTo = wbPath & pictureFormat
+
+    Dim i As Long
+    i = 1
+    Dim pic As Shape
+    For Each pic In ActiveSheet.Shapes
+        pic.Copy
+        MyPrintScreen (saveScreenshotTo)
+    Next
+
+ExportPicturesToFiles = saveScreenshotTo
+
+End Function
+
+Public Sub MyPrintScreen(FilePathName As String)
+
+    Dim IID_IDispatch As GUID
+    Dim uPicInfo As uPicDesc
+    Dim IPic As IPicture
+    Dim hPtr As Long
+
+    OpenClipboard 0
+    hPtr = GetClipboardData(CF_BITMAP)
+    CloseClipboard
+
+    With IID_IDispatch
+        .Data1 = &H7BF80980
+        .Data2 = &HBF32
+        .Data3 = &H101A
+        .Data4(0) = &H8B
+        .Data4(1) = &HBB
+        .Data4(2) = &H0
+        .Data4(3) = &HAA
+        .Data4(4) = &H0
+        .Data4(5) = &H30
+        .Data4(6) = &HC
+        .Data4(7) = &HAB
+    End With
+
+    With uPicInfo
+        .Size = Len(uPicInfo)
+        .Type = PICTYPE_BITMAP
+        .hPic = hPtr
+        .hPal = 0
+    End With
+
+    OleCreatePictureIndirect uPicInfo, IID_IDispatch, True, IPic
+    SavePicture IPic, FilePathName
+End Sub
+

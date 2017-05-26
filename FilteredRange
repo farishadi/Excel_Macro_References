@@ -1,0 +1,11 @@
+Public Function filteredRange(ByVal startFRRow As Long, ByVal startFRCol As Integer, ByVal endFRRow As Long, ByVal endFRCol As Integer) As Range
+'sub tries to handle the shortcomings of the specialcells(xlcelltypevisible) method that fails when filter only produces one line of results
+'sub checks for amount of lines in the filter result before choosing the appropriate FR method
+
+If startFRRow = endFRRow Then
+    Set filteredRange = Range(Cells(startFRRow, startFRCol), Cells(endFRRow, endFRCol))
+Else
+    Set filteredRange = Range(Cells(startFRRow, startFRCol), Cells(endFRRow, endFRCol)).SpecialCells(xlCellTypeVisible)
+End If
+
+End Function

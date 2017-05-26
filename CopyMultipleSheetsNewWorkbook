@@ -1,0 +1,43 @@
+Pulic Sub CopyMultipleSheetsNewWorkbook()
+
+    Dim Wb1 As Workbook
+    Dim dateStr As String
+    Dim myDate As Date
+    Dim Links As Variant
+    Dim i As Integer
+
+    With Application
+        .ScreenUpdating = False
+        .DisplayAlerts = False
+        .EnableEvents = False
+    End With
+
+    Set Wb1 = ActiveWorkbook
+
+    myDate = Date
+
+    dateStr = Format(myDate, "MM-DD-YYYY")
+
+    Wb1.Sheets(Array("Sheet1Name", "Sheet2Name", "etc."))Copy
+
+    With ActiveWorkbook
+    Links = .LinkSources(xlExcelLinks)
+    If Not IsEmpty(Links) Then
+        For i = 1 To UBound(Links)
+            .BreakLink Links(i), xlLinkTypeExcelLinks
+        Next i
+    End If
+
+    End With
+
+    ActiveWorkbook.SaveAs Filename:="N:\" & "Report Name" & " " & dateStr, FileFormat:=51
+    ActiveWorkbook.SaveAs Filename:="N:\Report Archive\" & "Report Name" & " " & dateStr, FileFormat:=51
+
+    ActiveWorkbook.Close
+
+    With Application
+        .ScreenUpdating = True
+        .DisplayAlerts = True
+        .EnableEvents = True
+    End With
+End Sub

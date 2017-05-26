@@ -1,0 +1,38 @@
+Public Function GetFiltRgTopRow() As Long
+
+'this function returns the top row number of a filtered list
+
+Dim HeaderRow As Long
+Dim LastFilterRow As Long
+
+On Error GoTo NoFilterOnSheet
+With ActiveSheet
+    HeaderRow = .AutoFilter.Range(1).Row
+    LastFilterRow = .Range(Split(.AutoFilter.Range.Address, ":")(1)).Row
+    GetFiltRgTopRow = .Range(.Rows(HeaderRow + 1), .Rows(Rows.Count)).SpecialCells(xlCellTypeVisible)(1).Row
+    If GetFiltRgTopRow = LastFilterRow + 1 Then GetFiltRgTopRow = 0
+End With
+    
+NoFilterOnSheet:
+
+End Function
+
+Public Function GetFiltRgBotRow() As Long
+
+'this function returns the bottom row number of a filtered list
+
+Dim HeaderRow As Long
+Dim LastFilterRow As Long
+Dim Addresses() As String
+
+On Error GoTo NoFilterOnSheet
+With ActiveSheet
+    HeaderRow = .AutoFilter.Range(1).Row
+    LastFilterRow = .Range(Split(.AutoFilter.Range.Address, ":")(1)).Row
+    Addresses = Split(.Range((HeaderRow + 1) & ":" & LastFilterRow).SpecialCells(xlCellTypeVisible).Address, "$")
+    GetFiltRgBotRow = Addresses(UBound(Addresses))
+End With
+
+NoFilterOnSheet:
+
+End Function

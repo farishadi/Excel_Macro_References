@@ -1,0 +1,47 @@
+Public Function rangeSelector(ByVal sKeyword As String, Optional wbTarg As Workbook, Optional bMultiCol As Boolean)
+
+'this function allows users to select a column range and checks it for suitability based on its parameters
+'accepts compulsory keyword value to indicate column to select
+'accepts optional workbook value if value is from external workbook that needs closing after selection
+'accepts optional multicolumn switch to allow single column or multiple columns selection (false - default for single column only selection, true for multiple column selection)
+
+'ask user to select column to take as material
+'insert input box for acquisition of range
+rangeSelect:
+Set copyRange = Nothing
+
+'on error to suppress errors from clicking cancel
+On Error Resume Next
+Set copyRange = Application.InputBox("Keyword """ & sKeyword & """ not found. Please select the " & sKeyword & " column manually.", sKeyword & " Column selection", , , , , , 8)
+On Error GoTo 0
+
+If copyRange Is Nothing Then
+    cancelSelect = MsgBox("You clicked cancel during the range selection. Are you sure you want to cancel the macro? This will end the macro and return you to the macro workbook. If you clicked Cancel by mistake, click ""No"" to select the Material range again. Click ""Yes"" to cancel and end.", vbYesNo, sKeyword & " Column Cancellation Confirmation")
+    If cancelSelect = vbNo Then
+        GoTo rangeSelect
+    Else
+        If Not wbTarg Is Nothing Then
+            wbTarg.Close savechanges:=False
+        End If
+        
+        ThisWorkbook.Sheets("Macro").Activate
+        MsgBox "User cancelled. Please re-run the macro to reselect the ranges."
+        End
+    End If
+
+'user selected more than 1 columns
+ElseIf copyRange.Columns.Count <> 1 And bMultiCol <> True Then
+    MsgBox "You have selected more than 1 column for the " & sKeyword & " Column. Please select ONLY ONE COLUMN."
+    GoTo rangeSelect
+    
+'user selected 1 column, but still need to confirm
+Else
+    confirmSelect = MsgBox("You have selected the column """ & Split(Cells(1, copyRange.Column).Address, "$")(1) & """ as the " & sKeyword & " Column. Is this correct?", vbYesNo, sKeyword & " Column Confirmation")
+    If confirmSelect = vbNo Then
+        GoTo rangeSelect
+    Else
+        keepAdd = copyRange.Address
+    End If
+End If
+
+End Function

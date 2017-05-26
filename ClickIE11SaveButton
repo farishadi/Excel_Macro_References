@@ -1,0 +1,23 @@
+Public Function ClickIE11SaveButton(ByRef ieApp As Object)
+
+Dim o As IUIAutomation
+Dim e As IUIAutomationElement
+Dim h As Long
+Dim iCnd As IUIAutomationCondition
+Dim Button As IUIAutomationElement
+Dim InvokePattern As IUIAutomationInvokePattern
+
+Set o = New CUIAutomation
+h = ieApp.hwnd
+h = FindWindowEx(h, 0, "Frame Notification Bar", vbNullString)
+If h = 0 Then Exit Function
+
+Set e = o.ElementFromHandle(ByVal h)
+Set iCnd = o.CreatePropertyCondition(UIA_NamePropertyId, "Save")
+
+Set Button = e.FindFirst(TreeScope_Subtree, iCnd)
+Set InvokePattern = Button.GetCurrentPattern(UIA_InvokePatternId)
+
+InvokePattern.Invoke
+
+End Function

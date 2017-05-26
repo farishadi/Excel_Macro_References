@@ -1,0 +1,16 @@
+Public Sub SelectMultipleShapes()
+
+'this sub selects multiple shapes by the name provided within the target sheet
+
+Dim objShape As Shape
+Dim i As Integer: i = 0
+Dim arrShapeNames() As String
+ReDim arrShapeNames(0 To 2) As String
+
+arrShapeNames(0) = "Oval1"
+arrShapeNames(1) = "Oval2"
+arrShapeNames(2) = "Oval3"
+
+Sheet1.Shapes.Range(arrShapeNames).Select
+
+End Sub

@@ -1,0 +1,10 @@
+'Method to use GetOpenFilename function for server filepath
+
+'library code to allow GetOpenFile to go directly to server filepath
+Declare Function SetCurrentDirectory Lib "kernel32" Alias "SetCurrentDirectoryA" (ByVal lpPathName As String) As Long
+
+'call method
+SetCurrentDirectory serverFilepath
+
+'open workbook, goes directly to server filepath
+sFPth1 = Application.GetOpenFilename(, , "X Workbook Selection")

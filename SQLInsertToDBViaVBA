@@ -1,0 +1,32 @@
+Public Function InsertDataToSQLServer(ByVal sSQLInput As String)
+
+'Call sample
+'Call InsertDataToSQLServer("INSERT INTO MasterList (Materials, Date, Action) VALUES ('Test7', '" & Format(Now, "mm/dd/yyyy") & "', '');")
+
+'connect SQL Server to send emel
+Dim dbRecSet As New ADODB.Recordset 'declare recordset for pulling and copying of data from database
+Dim dbConnctn As ADODB.Connection 'declare connection to connect to database
+Dim dbComnd As ADODB.Command 'declare commands to pull out data
+
+sServer = a 'Server Name
+sDbase = b 'Database Name
+sUName = c 'DBAdmin Username
+sPWord = d 'DBAdmin Username
+'SQL String Query
+sSQLStr = sSQLInput
+
+'connect to database with provided credentials
+Set dbConnctn = New ADODB.Connection
+dbConnctn.Open "Provider=sqloledb;" & _
+    "Server=" & sServer & ";Database=" & sDbase & ";" & "User ID=" & sUName & ";Password=" & sPWord & ";"
+
+'execute the SQL String
+dbRecSet.Open sSQLStr, dbConnctn, adOpenStatic, adLockReadOnly, adCmdText
+
+'close database and clear recordsets
+If CBool(dbRecSet.State And adStateOpen) = True Then dbRecSet.Close
+Set dbRecSet = Nothing
+If CBool(dbConnctn.State And adStateOpen) = True Then dbConnctn.Close
+Set dbConnctn = Nothing
+
+End Function

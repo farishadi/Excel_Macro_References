@@ -1,0 +1,46 @@
+Public Sub StringIncrementer()
+
+'This function accepts string inputs into "oriString" variable whereby the string input is in actuality
+'a shorthand for a range of incrementing serials of mixed alphabet and integer composition.
+'The sub splits the alphabets from the integers, gets the last values of the final integer series and tags them
+'as start and end. It then recombines the beginning fillers of the serial and increments the final integer values
+'into the longhand form.
+'e.g: "A1B1 - A1B5" is transformed to "A1B1, A1B2, A1B3, A1B4, A1B5"
+
+Dim oriString As String
+Dim modString As String
+Dim splitString() As String
+Dim splitStart() As String
+Dim splitEnd() As String
+Dim sStart As String
+Dim sEnd As String
+Dim lStart As Long
+Dim lEnd As Long
+Dim sFill As String
+Dim sFinal As String
+
+oriString = "A1B9 - A1B11"
+modString = Replace(oriString, " ", "")
+splitString = Split(modString, "-")
+sStart = splitString(0)
+sEnd = splitString(1)
+
+With CreateObject("VBScript.RegExp")
+    .Pattern = "(\d+|\D+)"
+    .Global = True
+    splitStart = Split(Mid(.Replace(sStart, "|$1"), 2), "|")
+    splitEnd = Split(Mid(.Replace(sEnd, "|$1"), 2), "|")
+    sFill = splitStart(0) & splitStart(1) & splitStart(2)
+    lStart = splitStart(3)
+    lEnd = splitEnd(3)
+End With
+
+For i = lStart To lEnd
+    If sFinal = "" Then
+        sFinal = sFill & i
+    Else
+        sFinal = sFinal & ", " & sFill & i
+    End If
+Next i
+
+End Sub

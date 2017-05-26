@@ -1,0 +1,41 @@
+'Click find in the shell session
+session.findById("wnd[1]/tbar[0]/btn[71]").press
+
+'look for "P1" keyword and click exact word search
+session.findById("wnd[2]/usr/txtGS_SEARCH-VALUE").Text = "P1"
+session.findById("wnd[2]/usr/chkGS_SEARCH-EXACT_WORD").Selected = True
+
+'click execute
+session.findById("wnd[2]/tbar[0]/btn[0]").press
+
+'if keyword is found
+If Left(session.findById("wnd[0]/sbar").Text, 3) = "Hit" Then
+    'close find window
+    session.findById("wnd[2]/tbar[0]/btn[12]").press
+    
+    'correct cell is already selected and highlighted by system. Double click/click choose
+    session.findById("wnd[1]/tbar[0]/btn[0]").press
+    
+    'click execute in primary SAP window
+    session.findById("wnd[0]/tbar[1]/btn[8]").press
+    
+'if keyword is not found
+ElseIf session.findById("wnd[0]/sbar").Text = "No Hit Found" Then
+    'close find window
+    session.findById("wnd[2]/tbar[0]/btn[12]").press
+    
+    'close shell window
+    session.findById("wnd[1]/tbar[0]/btn[12]").press
+    
+    'go back to home screen
+    session.findById("wnd[0]/tbar[0]/btn[12]").press
+    
+    'unsuppress alerts
+    Application.DisplayAlerts = True
+    
+    'Display error to user
+    MsgBox """P1"" User Group not found in SAP List! Contact Macro creator.", , "ERROR!"
+    
+    End
+    
+End If

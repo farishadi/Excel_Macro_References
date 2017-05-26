@@ -1,0 +1,25 @@
+Public Sub clearAllask()
+
+sure = MsgBox("Are you sure you want to clear the fields?", vbYesNo, "ATTENTION!")
+If sure = vbYes Then
+    Call clearAll
+    'Call clearSheets
+Else
+    MsgBox "Reset cancelled!"
+End If
+
+End Sub
+
+Public Sub clearAll()
+
+Dim aShFieldLoc(0 To 2) As String
+aShFieldLoc(0) = "C4"
+aShFieldLoc(1) = "G4"
+aShFieldLoc(2) = "K4"
+
+For i = 0 To UBound(aShFieldLoc)
+    Range(aShFieldLoc(i)).Value = ""
+    ThisWorkbook.Sheets("Macro").OLEObjects("ComboBox" & i + 1).Object.Value = ""
+Next i
+
+End Sub

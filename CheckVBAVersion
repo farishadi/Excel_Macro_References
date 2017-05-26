@@ -1,0 +1,9 @@
+Public Sub CheckVBA()
+
+#If VBA7 Then
+    MsgBox "VBA 7"
+#Else
+    MsgBox "VBA < 7"
+#End If
+
+End Sub

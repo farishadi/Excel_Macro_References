@@ -1,0 +1,135 @@
+Public Sub callingEmailAlgo()
+
+Dim imgEmbedComm, imgObject
+Dim tXtboxSrce As String
+Dim mbMsg As String
+Dim locations As String
+Dim flag As Boolean
+
+flag = False
+
+fromAdd = ActiveSheet.OLEObjects("TextBox1").Object.Value
+toAdd = ActiveSheet.OLEObjects("TextBox5").Object.Value
+
+'get locations
+For i = 1 To 10
+    If ActiveSheet.OLEObjects("CheckBox" & i).Object.Value = True Then
+        flag = True
+        Exit For
+    End If
+Next i
+
+If flag = True Then
+    For i = 1 To 10
+        If i = 1 And ActiveSheet.OLEObjects("CheckBox" & i).Object.Value = True Then
+            locations = ActiveSheet.OLEObjects("CheckBox" & i).Object.Caption
+        ElseIf i <> 1 And ActiveSheet.OLEObjects("CheckBox" & i).Object.Value = True Then
+            locations = locations & ", " & ActiveSheet.OLEObjects("CheckBox" & i).Object.Caption
+        End If
+    Next i
+Else
+    MsgBox "Checkbox ERROR! If you have accidentally unchecked the checkboxes, please re-check them. The macro needs the values from the checkboxes to compose the email."
+    End
+End If
+
+subj = "Fwd: Agilent / Keysight and Cisco " & locations & " Aging status as of " & Format(Now, "MM/DD/YYYY")
+mbMsg = "Confirm that the file to load is the " & ActiveSheet.OLEObjects("TextBox4").Object.Value & ".jpg?"
+tXtboxSrce = ActiveSheet.OLEObjects("TextBox3").Object.Value
+
+'Check if the file is really the one you want to upload as attachment
+If tXtboxSrce = "" Then
+    MsgBox "No file found! Please re-run the macro to output .jpg file."
+    End
+Else
+    mbStat = MsgBox(mbMsg, vbYesNo, mbTitle)
+    If mbStat = vbNo Then
+        MsgBox "User cancelled. Program terminate."
+        End
+    End If
+End If
+
+imgEmbedComm = "<html><body><img src=""<EMBEDDEDIMAGE:" & tXtboxSrce & ">"" /></body></html>"
+htmlBodyCont = "Hello All. Attached is the Agilent, Cisco and Keysight 02RI Aging Summary" & imgEmbedComm
+
+Set imgObject = PrepareMessageWithEmbeddedImages(fromAdd, toAdd, subj, htmlBodyCont)
+
+SmtpServer = "smtp.gmail.com"
+SmtpPort = 465
+UserName = fromAdd
+Password = ActiveSheet.OLEObjects("TextBox2").Object.Value
+
+'Check to ensure username and passwords are present
+If Trim(UserName) = "" Or InStr(1, Trim(UserName), "@") = 0 Or InStr(1, Trim(toAdd), "@") = 0 Or Trim(Password) = "" Then
+    MsgBox "Email or password is unavailable. Please check the fields and try again."
+    End
+End If
+
+SendMessageBySMTP imgObject, SmtpServer, SmtpPort, UserName, Password, True
+
+End Sub
+
+Public Function PrepareMessageWithEmbeddedImages(ByVal FromAddress, ByVal ToAddress, ByVal Subject, ByVal HtmlContent)
+
+Dim Message, Attachment, Expression, Matches, FilenameMatch, i
+
+Set Expression = CreateObject("VBScript.RegExp")
+Expression.Pattern = "\<EMBEDDEDIMAGE\:(.+?)\>"
+Expression.IgnoreCase = True
+Expression.Global = False 'one match at a time
+
+Set Message = CreateObject("CDO.Message")
+Message.From = FromAddress
+Message.To = ToAddress
+Message.Subject = Subject
+'***** ****** ***** ***** *****
+Message.AddAttachment ThisWorkbook.Path & "\" & ActiveSheet.OLEObjects("TextBox4").Object.Value & ".xlsx"
+'***** ****** ***** ***** *****
+
+'Find matches in email body, incrementally increasing the auto-assigned attachment identifiers
+i = 1
+While Expression.test(HtmlContent)
+    FilenameMatch = Expression.Execute(HtmlContent).Item(0).SubMatches(0)
+    Set Attachment = Message.AddAttachment(FilenameMatch)
+    Attachment.Fields.Item("urn:schemas:mailheader:Content-ID") = "<attachedimage" & i & ">" ' set an ID we can refer to in HTML
+    Attachment.Fields.Item("urn:schemas:mailheader:Content-Disposition") = "inline" ' "hide" the attachment
+    Attachment.Fields.Update
+    HtmlContent = Expression.Replace(HtmlContent, "cid:attachedimage" & i) ' update the HTML to refer to the actual attachment
+    i = i + 1
+Wend
+
+Message.HTMLBody = HtmlContent
+Set PrepareMessageWithEmbeddedImages = Message
+
+End Function
+ 
+Public Function SendMessageBySMTP(ByRef Message, ByVal SmtpServer, ByVal SmtpPort, ByVal SmtpUsername, ByVal SmtpPassword, ByVal UseSSL)
+
+Dim Configuration
+Set Configuration = CreateObject("CDO.Configuration")
+Configuration.Load -1 ' CDO Source Defaults
+Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
+Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserver") = SmtpServer
+Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = SmtpPort
+
+If SmtpUsername <> "" Then
+    Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 1
+    Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/sendusername") = SmtpUsername
+    Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/sendpassword") = SmtpPassword
+End If
+
+Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = UseSSL
+Configuration.Fields.Update
+
+Set Message.Configuration = Configuration
+On Error GoTo ErrHandler
+Message.Send
+
+MsgBox "Done!"
+
+Exit Function
+
+ErrHandler:
+MsgBox "Email or password error! Please check and make sure your email and password is correct and try again. Try your previous password (from before your last reset) if you are still unsucessful."
+End
+
+End Function

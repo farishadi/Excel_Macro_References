@@ -1,0 +1,26 @@
+'Public Function getDate(Optional selectedDate As Variant, Optional iDateSwitch As Integer = 1) As Date
+Public Function getDate(Optional selectedDate As Date, Optional iDateSwitch As Integer = 1) As Date
+
+'this function has 2 different modes
+'1. Returns the Monday date of any given week based on the date
+'2. Returns the last date of any given month based on the date
+'should there be no dates input as parameter, it will take current date
+
+If IsMissing(selectedDate) = True Then
+    selectedDate = Date
+End If
+
+If iDateSwitch = 1 Then
+    If Weekday(selectedDate) = 2 Then
+        getDate = selectedDate
+    ElseIf Weekday(selectedDate) > 2 Then
+        getDate = selectedDate - (Weekday(selectedDate) - 2)
+    ElseIf Weekday(selectedDate) < 2 Then
+        getDate = selectedDate - 6
+        'getDate = selectedDate - (2 - Weekday(selectedDate)) '< If first day is Sunday
+    End If
+ElseIf iDateSwitch = 2 Then
+    getDate = DateSerial(Year(selectedDate), Month(selectedDate) + 1, 0)
+End If
+
+End Function

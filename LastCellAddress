@@ -1,0 +1,18 @@
+Public Function lastCellAdd() As String
+
+'this function retrieves the row and column of the last most cell in the worksheet
+
+Dim lastColumn As Integer
+Dim lastRow As Long
+
+If WorksheetFunction.CountA(Cells) > 0 Then
+    'Search for any entry, by searching backwards by Rows.
+    lastRow = Cells.Find(What:="*", after:=Cells(Rows.Count, 1), SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
+    'Search for any entry, by searching backwards by Columns.
+    lastColumn = Cells.Find(What:="*", after:=Cells(1, Columns.Count), SearchOrder:=xlByColumns, SearchDirection:=xlPrevious).Column
+    lastCellAdd = Cells(lastRow, lastColumn).Address(False, False)
+Else
+    lastCellAdd = "X"
+End If
+
+End Function

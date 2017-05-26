@@ -1,0 +1,44 @@
+Public Sub RunStoredProc()
+
+HtmlContent = "Hello," + vbLf + "Below are the Material number that need a fair report." + vbLf + sArgs + vbLf + "Thanks and Regards."
+
+'connect SQL Server to send emel
+Dim dbRecSet As New ADODB.Recordset 'declare recordset for pulling and copying of data from database
+Dim dbConnctn As ADODB.Connection 'declare connection to connect to database
+Dim dbComnd As ADODB.Command 'declare commands to pull out data
+Dim sServer As String
+Dim sDbase As String
+Dim sUName As String
+Dim sPWord As String
+Dim parameterSize As Long
+
+sServer = a 'Server Name
+sDbase = b 'Database Name
+sUName = c 'DBAdmin Username
+sPWord = d 'DBAdmin Username
+
+'connect to database with provided credentials
+Set dbConnctn = New ADODB.Connection
+dbConnctn.Open "Provider=sqloledb;" & _
+    "Server=" & sServer & ";Database=" & sDbase & ";" & "User ID=" & sUName & ";Password=" & sPWord & ";"
+
+'create a new command and input settings
+Set dbComnd = New ADODB.Command
+
+'to Run Stored Procedure
+With dbComnd
+    .ActiveConnection = dbConnctn 'use preexisting connection
+    .CommandText = "sp_sendEmail" 'Stored procedure name
+    .CommandType = adCmdStoredProc 'default
+    .CommandTimeout = 3000 'timeout value in seconds
+    'parameter adding *repeat as many times as you have parameters
+    '.Parameters.Append .CreateParameter("your parameter name", adInteger, adParamInput, paramLength, your parameter value)
+    .Parameters.Append .CreateParameter("@MaterialNumber", adLongVarWChar, adParamInput, adArray, HtmlContent)
+    'use recordset to latch on to the data retreived (most important bit)
+    Set dbRecSet = .Execute
+End With
+
+'close database
+dbConnctn.Close
+    
+End Sub

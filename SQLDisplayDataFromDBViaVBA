@@ -1,0 +1,39 @@
+Public Sub DisplayDataFromSQLServer()
+
+'connect SQL Server to send emel
+Dim dbRecSet As New ADODB.Recordset 'declare recordset for pulling and copying of data from database
+Dim dbConnctn As ADODB.Connection 'declare connection to connect to database
+Dim dbComnd As ADODB.Command 'declare commands to pull out data
+Dim sServer As String
+Dim sDbase As String
+Dim sUName As String
+Dim sPWord As String
+Dim sSQLStr As String
+Dim parameterSize As Long
+
+sServer = a 'Server Name
+sDbase = b 'Database Name
+sUName = c 'DBAdmin Username
+sPWord = d 'DBAdmin Username
+'SQL String Query
+sSQLStr = "SELECT * FROM MasterList"
+
+'connect to database with provided credentials
+Set dbConnctn = New ADODB.Connection
+dbConnctn.Open "Provider=sqloledb;" & _
+    "Server=" & sServer & ";Database=" & sDbase & ";" & "User ID=" & sUName & ";Password=" & sPWord & ";"
+
+dbRecSet.Open sSQLStr, dbConnctn, adOpenStatic
+ ' Dump to spreadsheet
+With Worksheets("Sheet1").Cells(2, 1) ' Enter your sheet name and range here
+    .ClearContents
+    .CopyFromRecordset dbRecSet
+End With
+
+'close database and clear recordsets
+dbRecSet.Close
+Set dbRecSet = Nothing
+dbConnctn.Close
+Set dbConnctn = Nothing
+    
+End Sub

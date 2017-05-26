@@ -1,0 +1,19 @@
+'Call Method :
+a = addNewCol("A1", True)
+'where a returns the address of the newly added column
+
+Public Function addNewCol(ByVal targAdd As String, Optional bLeftAdd As Boolean = False) As String
+
+'this function adds a column to the left or right the target address provided, depending on the boolean flag indicator
+
+If bLeftAdd <> True Then
+    'insert a column to the right of the cell
+    ActiveSheet.Range(targAdd).EntireColumn.Offset(0, 1).Insert
+    addNewCol = Range(targAdd).Offset(0, 1).Address
+Else
+    'insert a column to the left of the cell
+    ActiveSheet.Range(targAdd).EntireColumn.Insert
+    addNewCol = Range(targAdd).Address
+End If
+
+End Function

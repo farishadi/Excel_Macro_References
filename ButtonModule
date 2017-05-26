@@ -1,0 +1,38 @@
+'BUTTONS MODULE
+
+'XBrowse variables
+Public sFPth1 As String
+Public wbX As Workbook
+
+Public Sub XBrowse()
+
+Application.ScreenUpdating = False
+
+Set cmbBox = ThisWorkbook.Sheets("Macro").ComboBox1
+
+'select and open X workbook
+sFPth1 = Application.GetOpenFilename(, , "X File Workbook Selection")
+If sFPth1 <> "" And sFPth1 <> "False" Then
+    'parse value into textbox
+    ThisWorkbook.Sheets("Macro").Range("C10").Value = sFPth1
+    'open workbook, get sheet names
+    Application.DisplayAlerts = False
+    Set wbX = Workbooks.Open(sFPth1)
+    Application.DisplayAlerts = True
+    cmbBox.Clear
+    
+    'get each sheet name from workbook and place into combo box
+    For Each indSheet In wbX.Sheets
+        cmbBox.AddItem indSheet.Name
+    Next indSheet
+    
+    wbX.Close savechanges:=False
+    
+Else
+    MsgBox "No file selected. Please re-run the macro and try again."
+    End
+End If
+
+Application.ScreenUpdating = False
+
+End Sub

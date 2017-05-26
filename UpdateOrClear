@@ -1,0 +1,74 @@
+Public Sub UpdateOrClear(ByVal shLanding As String, Optional ByRef wbTarg As Workbook, Optional ByVal shTarg As String, Optional ByVal bCloseResetWB As Boolean = True, Optional ByVal bOnlyClear As Boolean = True)
+
+'function to update (copy and paste values from other workbooks to current workbook) or clear
+'shLanding variable accepts current (landing) workbook sheet value
+'wbTarg variable accepts Target workbook value
+'shTarg variable accepts Target workbook sheet value
+'bCloseResetWB variable triggers Workbook Close Savechanges=false for wbTarg. Default = True
+'bOnlyClear variable triggers storing of shLanding value for error message when False. Default = True
+
+Dim sUnavailSh As String
+
+ThisWorkbook.Sheets(shLanding).Activate
+
+'disable autofilter if available
+If ActiveSheet.AutoFilterMode = True Then
+    ActiveSheet.AutoFilterMode = False
+End If
+
+If WorksheetFunction.CountA(Cells) <> 0 Then
+    'unhide all hidden columns just in case
+    Columns("A:" & Split(Range(lastCellAdd).Address, "$")(1)).EntireColumn.Hidden = False
+    Range(Cells(1, 1), Cells(Range(lastCellAdd).Row, Range(lastCellAdd).Column)).Delete
+End If
+
+Cells.NumberFormat = "General"
+
+If Not wbTarg Is Nothing Then
+
+    'activate, copy and paste sheet to Macro's sheet
+    If shTarg = "" Then
+        wbTarg.Activate
+    Else
+        wbTarg.Sheets(shTarg).Activate
+    End If
+    
+    'disable sheet protection if present
+    If ActiveSheet.ProtectContents = True Then
+        ActiveSheet.Unprotect
+    End If
+    
+    'disable autofilter if available
+    If ActiveSheet.AutoFilterMode = True Then
+        ActiveSheet.AutoFilterMode = False
+    End If
+    
+    'unhide all hidden columns and copy
+    Columns("A:" & Split(Range(lastCellAdd).Address, "$")(1)).EntireColumn.Hidden = False
+    Range(Cells(1, 1), Cells(Range(lastCellAdd).Row, Range(lastCellAdd).Column)).Copy
+    
+    ThisWorkbook.Sheets(shLanding).Activate
+    Application.DisplayAlerts = False
+    Range("A1").PasteSpecial xlPasteAllUsingSourceTheme
+    
+    Application.CutCopyMode = False
+    Application.DisplayAlerts = True
+    
+    If bCloseResetWB = True Then
+        wbTarg.Close savechanges:=False
+        Set wbTarg = Nothing
+    End If
+    
+Else
+    If bOnlyClear = False Then
+        If sUnavailSh <> "" Then
+            sUnavailSh = sUnavailSh & ", " & shLanding
+        Else
+            sUnavailSh = shLanding
+        End If
+    End If
+End If
+
+ThisWorkbook.Sheets(shLanding).Activate
+
+End Sub

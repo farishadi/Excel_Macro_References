@@ -1,0 +1,77 @@
+Public Sub emailAlgo()
+
+Dim myGmailAddress As String
+Dim myGmailPassword As String
+Dim mbMsg As String
+Dim mbTitle As String
+Dim mbStat As Integer
+Dim Mail As New Message
+Dim Cfg As Configuration
+
+ThisWorkbook.Activate
+
+myGmailAddress = ActiveSheet.OLEObjects("TextBox1").Object.Value
+myGmailPassword = ActiveSheet.OLEObjects("TextBox2").Object.Value
+
+mbMsg = "Confirm that the file to load is the " & ActiveSheet.OLEObjects("TextBox4").Object.Value & "?"
+
+UserName = myGmailAddress
+Password = myGmailPassword
+ToAddress = myGmailAddress
+Subject = "Test EMAIL from FARIS HADI MSG P1"
+'Subject = "Fwd: Agilent / Keysight and Cisco 02RI ,02RA,02RS,04RB Aging status as of " & Format(Now, "MM/DD/YYY")
+HTMLMessage = "Hello All. Attached is the Agilent, Cisco and Keysight 02RI Aging Summary"
+SmtpServer = "smtp.gmail.com"
+Attachment = ActiveSheet.OLEObjects("TextBox3").Object.Value
+
+    'CHECK FOR EMPTY AND INVALID PARAMETER VALUES
+    If Trim(UserName) = "" Or InStr(1, Trim(UserName), "@") = 0 Or Trim(Password) = "" Then
+        MsgBox "Email or password is unavailable. Please check the fields and try again."
+        Exit Sub
+    End If
+    
+    If ActiveSheet.OLEObjects("TextBox3").Object.Value = "" Then
+        MsgBox "No file found! Please re-run the macro to output .jpg file."
+    Else
+        mbStat = MsgBox(mbMsg, vbYesNo, mbTitle)
+        If mbStat = vbNo Then
+            MsgBox "User cancelled. Program terminate."
+            End
+        End If
+     
+    'On Error Resume Next
+    Set Cfg = Mail.Configuration
+     
+    'SETUP MAIL CONFIGURATION FIELDS
+    Cfg(cdoSendUsingMethod) = cdoSendUsingPort
+    Cfg(cdoSMTPServer) = SmtpServer
+    Cfg(cdoSMTPServerPort) = 465
+    Cfg(cdoSMTPAuthenticate) = cdoBasic
+    Cfg(cdoSMTPUseSSL) = True
+    Cfg(cdoSendUserName) = UserName
+    Cfg(cdoSendPassword) = Password
+    Cfg.Fields.Update
+    
+    On Error GoTo ErrHandler
+    With Mail
+        .From = UserName
+        .To = ToAddress
+        .Subject = Subject
+        .HTMLBody = HTMLMessage
+                
+        If Attachment <> "" Then
+            .AddAttachment Attachment, olByValue, 0
+        End If
+
+        'SEND EMAIL
+        .Send
+    End With
+    
+    MsgBox "Done!"
+    Exit Sub
+    
+ErrHandler:
+MsgBox "Email or password error! Please check and make sure your email and password is correct and try again. Try your previous password (from before your last reset) if you are still unsucessful."
+Exit Sub
+
+End Sub

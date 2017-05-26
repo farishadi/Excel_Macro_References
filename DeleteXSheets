@@ -1,0 +1,35 @@
+Public Sub deleteXSheets(ByVal sShName As String, Optional bApprox As Boolean)
+
+'deletes sheets based on sheet name
+'allows option for exact name or approximate,
+'bApprox = false (default) for exact string lookup and true for approximate
+
+Dim sSearchStr As String
+
+deleteInd = MsgBox("Are you sure you want to delete all of the " & sShName & " sheets?", vbYesNo, sShName & " Sheets Deletion")
+If deleteInd = vbYes Then
+    Application.DisplayAlerts = False
+    
+    If bApprox = True Then
+        sSearchStr = sShName
+    Else
+        sSearchStr = "*" & sShName & "*"
+    End If
+    
+    'delete all sheets with the keyword
+    For i = Sheets.Count To 1 Step -1
+        If Sheets(i).Name Like sSearchStr Then
+            ThisWorkbook.Sheets(i).Delete
+        End If
+    Next i
+    
+    Application.DisplayAlerts = True
+    MsgBox "Done!"
+    
+Else
+    ThisWorkbook.Sheets("Macro").Activate
+    MsgBox "User cancelled. Macro will now terminate."
+    End
+End If
+
+End Sub

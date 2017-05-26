@@ -1,0 +1,8 @@
+'Code to get GridView values from SAP Shell. Getting Current Cell Row and Column depends on which cell is highlighted
+'Function reference website included.
+
+a = session.findById("wnd[1]/usr/cntlGRID1/shellcont/shell").CurrentCellRow
+b = session.findById("wnd[1]/usr/cntlGRID1/shellcont/shell").CurrentCellColumn
+c = session.findById("wnd[1]/usr/cntlGRID1/shellcont/shell").GetCellValue(a, b)
+
+http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.borland.silktest.workbench.doc%2Flangref%2FSAP%2FSapGridViewClass_ref.html
