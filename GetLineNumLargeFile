@@ -1,0 +1,46 @@
+'source : https://stackoverflow.com/questions/13598691/read-number-of-lines-in-large-text-file-vb6
+
+Option Explicit
+
+Private Sub Main()
+    Const BUFSIZE As Long = 100000
+    Dim T0 As Single
+    Dim LfAnsi As String
+    Dim F As Integer
+    Dim FileBytes As Long
+    Dim BytesLeft As Long
+    Dim Buffer() As Byte
+    Dim strBuffer As String
+    Dim BufPos As Long
+    Dim LineCount As Long
+
+    T0 = Timer()
+    LfAnsi = StrConv(vbLf, vbFromUnicode)
+    F = FreeFile(0)
+    Open "big.txt" For Binary Access Read As #F
+    FileBytes = LOF(F)
+    ReDim Buffer(BUFSIZE - 1)
+    BytesLeft = FileBytes
+    Do Until BytesLeft = 0
+        If BufPos = 0 Then
+            If BytesLeft < BUFSIZE Then ReDim Buffer(BytesLeft - 1)
+            Get #F, , Buffer
+            strBuffer = Buffer 'Binary copy of bytes.
+            BytesLeft = BytesLeft - LenB(strBuffer)
+            BufPos = 1
+        End If
+        Do Until BufPos = 0
+            BufPos = InStrB(BufPos, strBuffer, LfAnsi)
+            If BufPos > 0 Then
+                LineCount = LineCount + 1
+                BufPos = BufPos + 1
+            End If
+        Loop
+    Loop
+    Close #F
+    'Add 1 to LineCount if last line of your files do not
+    'have a trailing CrLf.
+    MsgBox "Counted " & Format$(LineCount, "#,##0") & " lines in" & vbNewLine _
+         & Format$(FileBytes, "#,##0") & " bytes of text." & vbNewLine _
+         & Format$(Timer() - T0, "0.0#") & " seconds."
+End Sub
