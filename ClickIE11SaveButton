@@ -1,3 +1,16 @@
+'library code
+#If VBA7 Then
+    Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+    Private Declare PtrSafe Function FindWindowEx Lib "user32" Alias "FindWindowExA" _
+    (ByVal hWnd1 As Long, ByVal hWnd2 As Long, ByVal lpsz1 As String, _
+    ByVal lpsz2 As String) As Long
+#Else
+    Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+    Private Declare Function FindWindowEx Lib "user32" Alias "FindWindowExA" _
+    (ByVal hWnd1 As Long, ByVal hWnd2 As Long, ByVal lpsz1 As String, _
+    ByVal lpsz2 As String) As Long
+#End If
+
 Public Function ClickIE11SaveButton(ByRef ieApp As Object)
 
 Dim o As IUIAutomation
