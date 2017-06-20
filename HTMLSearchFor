@@ -1,0 +1,36 @@
+Public Function HTMLSearchFor(ByRef oPage As Object, ByRef sSearchText As String, Optional iSearchCat As Integer = 1) As Object
+
+'this function looks for the HTML document elements needed
+'function allows approximate matching via flipping the iSearchCat switch
+'(1 for ID matching, 2 for Tag Name matching)
+
+Dim dErrTime As Date
+
+On Error GoTo errHandlerHTMLSearch
+dErrTime = Now()
+
+If iSearchCat = 1 Then
+    Set HTMLSearchFor = oPage.Document.getElementById(sSearchText)
+ElseIf iSearchCat = 2 Then
+    Set HTMLSearchFor = oPage.Document.getElementsByTagName(sSearchText)
+End If
+
+Exit Function
+
+errHandlerHTMLSearch:
+'type mismatch error from HTMLSearchFor, looking for data while waiting for page is loading
+'used as a makeshift do while/application wait, end if looped more than a minute
+'Err.Raise (Err.Number)
+Err.Number = 0
+If Now() >= dErrTime + TimeValue("00:01:00") Then
+    If sSearchText = "QUICKSEARCH_TABLE" Then
+        Set HTMLSearchFor = Nothing
+        Exit Function
+    Else
+        MsgBox "Macro stuck in infinite loop. Please retry macro. If problem persists, contact macro creator.", vbExclamation, "ERROR!"
+        End
+    End If
+End If
+Resume
+
+End Function
