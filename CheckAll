@@ -4,6 +4,7 @@ Public Sub checkAll()
 
 Dim dUsedDate As Date
 
+'Checks SAP access
 SAPCheck = MsgBox("You must be logged into SAP to run this macro, failure to do so will produce an error with the macro. Are you logged in to SAP?", vbYesNo, "SAP Login Check")
 If SAPCheck = vbNo Then
     MsgBox "Please log into SAP and try to run the macro again."
