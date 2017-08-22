@@ -1,0 +1,34 @@
+Public Sub FindInFolderMoveAndRename()
+
+'This functions gets into the specified folder, looks for the target file name and moves and renames the file
+'to the desired name and location
+
+Dim sDirectoryPath As String
+Dim fileSys As FileSystemObject
+Dim sFolderPath As Variant
+Dim objFile As File
+Dim strFilename As String
+Dim dCompDate As Date
+
+'set up filesys objects and set path for files - change for your folder
+sDirectoryPath = Environ("HOMEDRIVE") & Environ("HOMEPATH") & "\Downloads"
+Set fileSys = New FileSystemObject
+Set sFolderPath = fileSys.GetFolder(sDirectoryPath)
+
+'loop through each file and get date created. If larger than dCompDate then store fname
+dCompDate = DateSerial(1900, 1, 1)
+For Each objFile In sFolderPath.Files
+    If objFile.Name Like "agile_*" And objFile.DateCreated > dCompDate Then
+        strFilename = objFile.Name
+        dCompDate = objFile.DateCreated
+    End If
+Next objFile
+
+If strFilename <> "" Then
+    Name sDirectoryPath & "\" & strFilename As ThisWorkbook.Path & "\" & aBOMVals(i) & ".xls"
+End If
+        
+Set fileSys = Nothing
+Set sFolderPath = Nothing
+
+End Sub
