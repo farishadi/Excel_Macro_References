@@ -9,6 +9,7 @@ Dim sFolderPath As Variant
 Dim objFile As File
 Dim strFilename As String
 Dim dCompDate As Date
+Dim bBOMDownloaded As Boolean
 
 'set up filesys objects and set path for files - change for your folder
 sDirectoryPath = Environ("HOMEDRIVE") & Environ("HOMEPATH") & "\Downloads"
@@ -16,7 +17,7 @@ Set fileSys = New FileSystemObject
 Set sFolderPath = fileSys.GetFolder(sDirectoryPath)
 
 'loop through each file and get date created. If larger than dCompDate then store fname
-dCompDate = DateSerial(1900, 1, 1)
+dCompDate = Date & " 00:00:01"
 For Each objFile In sFolderPath.Files
     If objFile.Name Like "agile_*" And objFile.DateCreated > dCompDate Then
         strFilename = objFile.Name
@@ -25,10 +26,14 @@ For Each objFile In sFolderPath.Files
 Next objFile
 
 If strFilename <> "" Then
+    bBOMDownloaded = True
     Name sDirectoryPath & "\" & strFilename As ThisWorkbook.Path & "\" & aBOMVals(i) & ".xls"
+Else
+    bBOMDownloaded = False
 End If
-        
+
 Set fileSys = Nothing
 Set sFolderPath = Nothing
+Set objFile = Nothing
 
 End Sub
