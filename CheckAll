@@ -1,0 +1,57 @@
+Public Sub checkAll()
+
+'This sub checks all of the necessary fields in the macro sheet to make sure all of the fields are filled.
+
+Dim dUsedDate As Date
+
+SAPCheck = MsgBox("You must be logged into SAP to run this macro, failure to do so will produce an error with the macro. Are you logged in to SAP?", vbYesNo, "SAP Login Check")
+If SAPCheck = vbNo Then
+    MsgBox "Please log into SAP and try to run the macro again."
+    End
+End If
+
+Dim aWbLoc(0 To 1) As String
+aWbLoc(0) = "C4"
+aWbLoc(1) = "C8"
+
+Dim aWbVars(0 To 1) As String
+aWbVars(0) = "X"
+aWbVars(1) = "X"
+
+dUsedDate = Format(Date, "mm/dd/yyyy")
+
+'catches empty workbook and sheet
+For i = 0 To 1
+
+    If ThisWorkbook.Sheets("Macro").Range(aWbLoc(i)).Value = "" Then
+        MsgBox "Please select the " & aWbVars(i) & " Workbook first by clicking the " & aWbVars(i) & """ Browse"" Button before running the macro!"
+        End
+    End If
+    
+    If ThisWorkbook.Sheets("Macro").OLEObjects("ComboBox" & i + 1).Object.Value = "" Then
+        MsgBox "Please select the Worksheet for " & aWbVars(i) & " Workbook first before running the macro!"
+        End
+    End If
+    
+Next i
+
+'check if macro location contains workbook name. if not, create new one. else delete the old one, run the current.
+sFName = "X" & Format(dUsedDate, "mmddyyyy")
+sCheck = Dir(ThisWorkbook.Path & "\" & sFName & "*")
+
+'check if previous run is in folder or not
+'if found, confirm delete with user
+If sCheck <> "" Then
+    deletePrevFle = MsgBox("The macro has been run for the day and a previous version is detected. Do you want to delete the previous version and override with this run?", vbYesNo, "Previous workbook delete confirmation")
+    If deletePrevFle = vbYes Then
+        Kill ThisWorkbook.Path & "\" & sCheck
+    Else
+        ThisWorkbook.Sheets("Macro").Activate
+        MsgBox "Previous workbook deletion cancelled. Macro terminated."
+        End
+    End If
+End If
+
+Call main
+
+End Sub
