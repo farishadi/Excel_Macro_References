@@ -1,0 +1,15 @@
+Public Function ReplaceInvalidNaming(ByVal sInputString As String) As String
+
+'Calling method: a = ReplaceInvalidNaming("Sample")
+
+Const sInvalidChars As String = "/\|<>:*?"""
+
+ReplaceInvalidNaming = sInputString
+
+For j = 1 To Len(sInvalidChars)
+    If InStr(ReplaceInvalidNaming, Mid(sInvalidChars, j, 1)) <> 0 Then
+        ReplaceInvalidNaming = Replace(ReplaceInvalidNaming, Mid(sInvalidChars, j, 1), "_")
+    End If
+Next j
+
+End Function
