@@ -1,0 +1,27 @@
+'FARIS, PUSH THIS FUNCTION INTO GITHUB ASAP. INTERNET IS DOWN, DIDN'T MANAGE TO PUSH IT UP
+'*********************************************************************************************
+'*********************************************************************************************
+
+' Returns True if an array contains duplicate values
+' it works with arrays of any type
+
+Function HasDuplicateValues(arr As Variant) As Boolean
+    Dim col As Collection, index As Long
+    Set col = New Collection
+    
+    ' assume that the array contains duplicates
+    HasDuplicateValues = True
+    
+    On Error GoTo FoundDuplicates
+    For index = LBound(arr) To UBound(arr)
+        ' build the key using the array element
+        ' an error occurs if the key already exists
+        col.Add 0, CStr(arr(index))
+    Next
+    ' if control comes here, the array doesn't contain
+    ' any duplicate values, so we can return zero
+    HasDuplicateValues = False
+    
+FoundDuplicates:
+
+End Function
