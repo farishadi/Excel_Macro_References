@@ -1,0 +1,2 @@
+'This command outputs a synthesized voice for any input pushed in. 
+Application.Speech.Speak "Test"
