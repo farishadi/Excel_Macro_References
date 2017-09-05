@@ -1,0 +1,9 @@
+Public Sub IE_Sledgehammer()
+    Dim objWMI As Object, objProcess As Object, objProcesses As Object
+    Set objWMI = GetObject("winmgmts://.")
+    Set objProcesses = objWMI.ExecQuery("SELECT * FROM Win32_Process WHERE Name = 'iexplore.exe'")
+    For Each objProcess In objProcesses
+        Call objProcess.Terminate
+    Next
+    Set objProcesses = Nothing: Set objWMI = Nothing
+End Sub
