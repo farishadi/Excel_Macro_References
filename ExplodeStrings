@@ -1,0 +1,91 @@
+Public Function ExplodeStrings(ByVal inputString As String) As String
+
+'this function take a shorthand string input and splits it into a sequential arrangement
+'Sample string: J12-13
+'Sample output: J12, J13
+
+Dim x As Long
+Dim y As Long
+Dim indvParts() As String
+Dim sOriginal As String
+Dim sModified As String
+Dim splitString() As String
+Dim splitStart() As String
+Dim splitEnd() As String
+Dim sStart As String
+Dim sEnd As String
+Dim sFill As String
+Dim lStart As Long
+Dim lEnd As Long
+Dim sFinal As String
+
+'replace new line with space in inputString
+inputString = Replace(inputString, Chr(10), " ")
+'replace all commas in inputString, trim the back for extra space, replace errant spaces in front of or behind the "-" symbols
+inputString = Replace(Replace(Application.Trim(Replace(inputString, ",", " ")), " -", "-"), "- ", "-")
+
+'FARIS > How to handle M-dash or N-dash? Do I need to?
+
+'split inputString and push into IndvParts string array
+indvParts = Split(inputString)
+
+'loop through each indvParts
+'x controls looping through indvParts array
+For x = 0 To UBound(indvParts)
+    
+    'if current indvPart has a "-", run separation and sequential increment algorithm
+    If indvParts(x) Like "*-*" Then
+        sFinal = ""
+        sOriginal = indvParts(x)
+        sModified = Replace(sOriginal, " ", "")
+        splitString = Split(sModified, "-")
+        sStart = splitString(0)
+        sEnd = splitString(1)
+        
+        With CreateObject("VBScript.RegExp")
+            .Pattern = "(\d+|\D+)"
+            .Global = True
+            splitStart = Split(Mid(.Replace(sStart, "|$1"), 2), "|")
+            splitEnd = Split(Mid(.Replace(sEnd, "|$1"), 2), "|")
+            
+            'b = Split(Mid(.Replace("K14L2", "|$1"), 2), "|")
+            'FARIS ^ works to split part numbers, use this for enhancement
+            
+            'handle the prefix of the strings
+            If UBound(splitStart) = 1 Then
+                sFill = splitStart(0)
+            Else
+                sFill = splitStart(0) & splitStart(1) & splitStart(2)
+            End If
+            
+            'handle incrementing suffix of the strings
+            lStart = splitStart(UBound(splitStart))
+            lEnd = splitEnd(UBound(splitEnd))
+        
+        End With
+        
+        For y = lStart To lEnd
+            If sFinal = "" Then
+                sFinal = sFill & y
+            Else
+                sFinal = sFinal & ", " & sFill & y
+            End If
+        Next y
+    
+        If ExpandedSeries = "" Then
+            ExplodeStrings = sFinal
+        Else
+            ExplodeStrings = ExplodeStrings & ", " & sFinal
+        End If
+        
+    'if current indvPart does not have a "-", skip, push into final string and continue on
+    Else
+        If ExpandedSeries = "" Then
+            ExplodeStrings = indvParts(x)
+        Else
+            ExplodeStrings = ExplodeStrings & ", " & indvParts(x)
+        End If
+    End If
+Next x
+
+End Function
