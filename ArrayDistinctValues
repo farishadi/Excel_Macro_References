@@ -3,13 +3,13 @@ Public Function ArrayDistinctValues(targRange As Range) As String()
 'function accepts a range value, loops down range, pushes unique values within the range into an array
 'and returns the array as a string array
 
-'create a unique, no duplicate collection
 Dim rCell As Range
 Dim cUniqueVals As New Collection
 Dim iArrCnt As Integer
 Dim aUniqueVals() As String
 ReDim aUniqueVals(0 To 0) As String
 
+'create a unique, no duplicate collection, push into an array
 For Each rCell In targRange
     On Error GoTo errHandler
     cUniqueVals.Add Trim(rCell.Value), Trim(CStr(rCell.Value))
