@@ -16,3 +16,5 @@ Else
 End If
 
 End Function
+
+lLastRow = Cells(Rows.Count, 1).End(xlUp).Row
