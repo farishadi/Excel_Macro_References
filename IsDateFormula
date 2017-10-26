@@ -1,4 +1,0 @@
-Public Function IDATE(rng As Range) As Boolean
-'custom user defined vba function for use as formula
-    IDATE = IsDate(rng)
-End Function
