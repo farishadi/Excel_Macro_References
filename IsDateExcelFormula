@@ -1,0 +1,4 @@
+Public Function IDATE(ByVal inputString As String) As Boolean
+'custom user defined vba function for use as formula
+    IDATE = IsDate(inputString)
+End Function
