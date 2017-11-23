@@ -1,0 +1,104 @@
+Public Sub MultipleSelectMergeWorkbook()
+
+Application.ScreenUpdating = False
+
+Dim lMaxFileNum As Long
+Dim fdTargFiles As FileDialog
+Dim wbOutput As Workbook
+Dim shOutput As Worksheet
+Dim wbTarg As Workbook
+Dim shTarg As Worksheet
+Dim lHeadRow As Long
+Dim lLastRow_Output As Long
+Dim sFinalWBAdd As String
+Dim iGearCol_Output As Integer
+
+'initialize variables
+ThisWorkbook.Sheets("Macro").Range("C4").Value = ""
+lMaxFileNum = 2001
+
+'prompt user to select files
+Set fdTargFiles = Application.FileDialog(msoFileDialogOpen)
+With fdTargFiles
+    .AllowMultiSelect = True
+    .Title = "Multi-select target BU files:"
+    .ButtonName = ""
+    .Filters.Clear
+    '.Filters.Add ".xlsx files", "*.xlsx"
+    .Show
+End With
+
+'error trap - don't allow user to pick more than 2000 files and check if user selected any files
+If fdTargFiles.SelectedItems.Count > lMaxFileNum Then
+    MsgBox ("Too many files selected, please pick less than " & lMaxFileNum & ". Exiting sub...")
+    Exit Sub
+ElseIf fdTargFiles.SelectedItems.Count = 0 Then
+    MsgBox ("No files selected! Macro terminated.")
+    Exit Sub
+End If
+
+'check if output workbook is already created in the folder. if not, create new one. else delete the old one, run the current.
+sFinalWBAdd = fdTargFiles.InitialFileName & "X_" & Format(Date, "mmddyyyy") & ".xlsx"
+sCheck = Dir(sFinalWBAdd)
+
+'check if previous run is in folder or not
+'if found, confirm delete with user
+If sCheck <> "" Then
+    Kill sFinalWBAdd
+End If
+
+'set up the output workbook
+Set wbOutput = Workbooks.Add
+wbOutput.SaveAs Filename:=sFinalWBAdd, FileFormat:=xlOpenXMLWorkbook
+
+'loop through all files
+For i = 1 To fdTargFiles.SelectedItems.Count
+
+    'open the file and assign the workbook/worksheet
+    Application.AskToUpdateLinks = False
+    Set wbTarg = Workbooks.Open(fdTargFiles.SelectedItems(i))
+    Set shTarg = wbTarg.ActiveSheet
+    Application.AskToUpdateLinks = True
+    
+    'undo filters if present, unhide rows and columns
+    If ActiveSheet.AutoFilterMode = True Then
+        ActiveSheet.AutoFilterMode = False
+    End If
+    
+    If WorksheetFunction.CountA(Cells) <> 0 Then
+        'unhide all hidden columns just in case
+        Columns("A:" & Split(Range(lastCellAdd).Address, "$")(1)).EntireColumn.Hidden = False
+    End If
+    
+    'get header row
+    lHeadRow = Range(searchFor("Header")).Row
+    
+    'if this is the first go-round, include the header
+    If i = 1 Then
+        Range(Cells(lHeadRow, 1), Cells(Range(lastCellAdd).Row, Range(lastCellAdd).Column)).Copy
+        wbOutput.Sheets(1).Activate
+        Cells(1, 1).PasteSpecial xlPasteAllUsingSourceTheme
+        Application.CutCopyMode = False
+        
+    'if this is NOT the first go-round, then skip the header
+    Else
+        Range(Cells(lHeadRow + 1, 1), Cells(Range(lastCellAdd).Row, Range(lastCellAdd).Column)).Copy
+        wbOutput.Sheets(1).Activate
+        Cells(Cells(Rows.Count, 1).End(xlUp).Row + 1, 1).PasteSpecial xlPasteAllUsingSourceTheme
+        Application.CutCopyMode = False
+    End If
+
+    'close the data book without saving
+    wbTarg.Close savechanges:=False
+    
+Next i
+
+sFinalWBAdd = fdTargFiles.InitialFileName & "X_" & Format(Date, "mmddyyyy") & ".xlsx"
+wbOutput.Close savechanges:=True
+
+ThisWorkbook.Sheets("Macro").Range("C4").Value = sFinalWBAdd
+Application.ScreenUpdating = True
+
+MsgBox "Files merged!"
+
+End Sub
