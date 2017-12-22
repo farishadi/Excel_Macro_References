@@ -1,6 +1,6 @@
 Public Sub ArrayContains()
 
-'Checks if array contains variable (Exact match and Caps sensitive)
+'Checks if array contains variable (Exact match and Caps sensitive), returns True/False
 Dim aTestArr(0 To 1) As String
 aTestArr(0) = "TestString1"
 aTestArr(1) = "TestString2"
