@@ -2,7 +2,7 @@ Public Function rangeSelector(ByVal sKeyword As String, wbTarg As Workbook, Opti
 
 'this function allows users to select a column range and checks it for suitability based on its parameters
 'accepts compulsory keyword value to indicate column to select
-'accepts optional workbook value if value is from external workbook that needs closing after selection
+'accepts compulsory workbook value if value is from external workbook that needs closing after selection
 'accepts optional multicolumn switch to allow single column or multiple columns selection (false - default for single column only selection, true for multiple column selection)
 
 'ask user to select column to take as material
