@@ -1,0 +1,27 @@
+Public Function LastDateInQtr(Optional checkDate As Date = 0) As Date
+
+'Function returns the last day in the quarter based on date
+Const numOfMnthsInQtr As Integer = 3
+
+If checkDate = 0 Then
+    'use current date if no date passed in
+    checkDate = Date
+End If
+
+LastDateInQtr = DateSerial(Year(checkDate), Int((Month(checkDate) - 1) / numOfMnthsInQtr) * numOfMnthsInQtr + (numOfMnthsInQtr + 1), 0)
+    
+End Function
+
+Public Function FirstDateInQtr(Optional checkDate As Date = 0) As Date
+
+'Function returns the first day in the quarter based on date
+Const numOfMnthsInQtr As Integer = 3
+
+If checkDate = 0 Then
+    'use current date if no date passed in
+    checkDate = Date
+End If
+
+FirstDateInQtr = DateSerial(Year(checkDate), Int((Month(checkDate) - 1) / numOfMnthsInQtr) * numOfMnthsInQtr + 1, 1)
+
+End Function
