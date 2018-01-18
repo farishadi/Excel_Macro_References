@@ -17,7 +17,7 @@ NoFilterOnSheet:
 
 End Function
 
-Public Function GetFiltRgBotRow() As Long
+Public Function GetFiltRgBtmRow() As Long
 
 'this function returns the bottom row number of a filtered list
 
