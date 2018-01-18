@@ -30,7 +30,7 @@ With ActiveSheet
     HeaderRow = .AutoFilter.Range(1).Row
     LastFilterRow = .Range(Split(.AutoFilter.Range.Address, ":")(1)).Row
     Addresses = Split(.Range((HeaderRow + 1) & ":" & LastFilterRow).SpecialCells(xlCellTypeVisible).Address, "$")
-    GetFiltRgBotRow = Addresses(UBound(Addresses))
+    GetFiltRgBtmRow = Addresses(UBound(Addresses))
 End With
 
 NoFilterOnSheet:
