@@ -1,0 +1,4 @@
+If ActiveSheet.AutoFilterMode = True Then
+    ActiveSheet.ShowAllData
+    ActiveSheet.AutoFilterMode = False
+End If
