@@ -1,6 +1,6 @@
 Public Sub MakeTableBorder(ByVal iStartRow As Integer, ByVal iStartCol As Integer, ByVal iEndRow As Integer, ByVal iEndCol As Integer)
 
-'function creates and all encompassing table line around the data with user provided:
+'function creates an all encompassing table line around the data with user provided:
 'Start Row, Start Column, End Row and End Column
 
 With Range(Cells(iStartRow, iStartCol), Cells(iEndRow, iEndCol))
