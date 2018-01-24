@@ -1,0 +1,45 @@
+Public Sub SAPPull()
+
+SAPCheck = MsgBox("You must be logged into SAP to run this macro, failure to do so will produce an error with the macro. Are you logged in to SAP?", vbYesNo, "SAP Login Check")
+If SAPCheck = vbNo Then
+    MsgBox "Please log into SAP and try to run the macro again."
+    End
+End If
+
+'Connect to SAP
+Set SapGuiAuto = GetObject("SAPGUI")
+Set applications = SapGuiAuto.GetScriptingEngine
+
+'Check existance of SAP logon screen first before proceed
+If applications.Children.Count > 0 Then
+    Set Connection = applications.Children(0)
+    
+    'SAP is available, run checks before proceeding
+    Call checkAll
+    
+Else
+    MsgBox "This macro requires access to the SAP system and no SAP Logon detected. Please logon to SAP system and try again!"
+    End
+End If
+
+Set session = Connection.Children(0)
+   
+If Not IsObject(applications) Then
+    Set SapGuiAuto = GetObject("SAPGUI")
+    Set applications = SapGuiAuto.GetScriptingEngine
+End If
+
+If Not IsObject(Connection) Then
+    Set Connection = applications.Children(0)
+End If
+
+If Not IsObject(session) Then
+    Set session = Connection.Children(0)
+End If
+
+If IsObject(WScript) Then
+    WScript.ConnectObject session, "on"
+    WScript.ConnectObject applications, "on"
+End If
+
+End Sub
