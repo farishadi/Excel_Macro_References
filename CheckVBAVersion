@@ -6,4 +6,12 @@ Public Sub CheckVBA()
     MsgBox "VBA < 7"
 #End If
 
+#If Win64 Then 
+' Win64=true, Win32=true, Win16= false 
+#ElseIf Win32 Then 
+' Win32=true, Win16=false 
+#Else 
+' Win16=true 
+#End If
+
 End Sub
