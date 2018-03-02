@@ -1,0 +1,39 @@
+Public Sub SendMailO365()
+
+'This method sends email via Outlook365 without the need for user's username and password
+'The "From" field accepts any value as long as it contains "@" and ".", recommend maintain with noreply@org.com
+
+'Declare Send Mail Property
+Dim oConf As Object
+Set oConf = CreateObject("CDO.Configuration")
+
+'CDO Source Defaults
+oConf.Load -1
+With oConf.Fields
+    .Item("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
+    .Item("http://schemas.microsoft.com/cdo/configuration/smtpserver") = serverPath
+    .Item("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = serverPort
+    .Update
+End With
+
+'Create email
+Dim oMsg As Object
+Set oMsg = Nothing
+Set oMsg = CreateObject("CDO.Message")
+'Set iConf = CreateObject("CDO.Configuration")
+
+With oMsg
+    Set .Configuration = oConf
+    .To = ""
+    .CC = ""
+    '.BCC = ""
+    .From = ""
+    .Subject = ""
+    .BodyPart.Charset = "utf-8" 'to accept chinese characters
+    .HTMLBody = ""
+    '.TextBody = ""
+    '.AddAttachment (fullAttachmentPath)
+    .Send
+End With
+
+End Sub
