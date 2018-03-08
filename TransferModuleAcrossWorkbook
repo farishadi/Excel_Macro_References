@@ -1,0 +1,34 @@
+'SOURCED FROM https://stackoverflow.com/questions/40956465/vba-to-copy-module-from-one-excel-workbook-to-another-workbook
+'README
+'Just make sure, following things are done before running this macro.
+'
+'List Item
+'VB Editor > Tools > References > (Check) Microsoft Visual Basic for Applications Extensibility 5.3
+'
+'List Item
+'File -> Options -> Trust Center -> Trust Center Setttings -> Macro Settings -> Trust Access to the VBA Project object model.
+'
+'Once you do above, copy & paste below code in Source File
+
+Sub TransferModuleAcrossWorkbook()
+'Copy this VBA Code in SourceMacroModule, & run this macro in Destination workbook by pressing Alt+F8, the whole module gets copied to destination File.
+Dim SourceVBProject As VBIDE.VBProject
+Dim DestinationVBProject As VBIDE.VBProject
+Dim NewWb As Workbook
+
+Set SourceVBProject = ThisWorkbook.VBProject
+Set NewWb = ActiveWorkbook ' Or whatever workbook object you have for the destination
+Set DestinationVBProject = NewWb.VBProject
+
+Dim SourceModule As VBIDE.CodeModule
+Dim DestinationModule As VBIDE.CodeModule
+Set SourceModule = SourceVBProject.VBComponents("Module1").CodeModule ' Change "Module1" to the relevant source module
+' Add a new module to the destination project
+Set DestinationModule = DestinationVBProject.VBComponents.Add(vbext_ct_StdModule).CodeModule
+
+With SourceModule
+    DestinationModule.AddFromString .Lines(1, .CountOfLines)
+End With
+
+End Sub
+
