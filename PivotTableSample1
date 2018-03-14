@@ -1,0 +1,53 @@
+Public Sub PivotTableSample1()
+Dim objTable As PivotTable
+Dim objField As PivotField
+    
+'Pivot table creation algo
+Sheets("PGI").Range(Cells(lngFirstRow, intFirstCol), Cells(lngLastRow, intLastCol)).Select
+
+' Create the PivotTable object based on the Employee data on Sheet1.
+Set objTable = Sheets("PGI").PivotTableWizard
+
+pivotName = ActiveSheet.PivotTables(1).Name
+
+With ActiveSheet.PivotTables(pivotName)
+
+    With .PivotFields("MRP Controller")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    
+    With .PivotFields("Material")
+        .Orientation = xlRowField
+        .Position = 2
+    End With
+
+    With .PivotFields("DELIVERYQTY")
+        .Orientation = xlRowField
+        .Position = 3
+    End With
+    
+    With .PivotFields("Act. Gds Mvmnt Date")
+        .Orientation = xlRowField
+        .Position = 4
+    End With
+
+    .PivotFields("MRP Controller").LayoutForm = xlTabular
+    .PivotFields("Material").LayoutForm = xlTabular
+    .PivotFields("DELIVERYQTY").LayoutForm = xlTabular
+    .PivotFields("Act. Gds Mvmnt Date").LayoutForm = xlTabular
+
+    .AddDataField ActiveSheet.PivotTables(pivotName).PivotFields("DELIVERYQTY"), "Sum of Qty", xlSum
+
+End With
+
+ActiveSheet.Name = "PGI PivotTable"
+ActiveSheet.Cells.EntireColumn.AutoFit
+ActiveSheet.Cells.EntireRow.AutoFit
+
+With Cells
+    .Copy
+    .PasteSpecial xlPasteValues
+End With
+
+Application.CutCopyMode = False
