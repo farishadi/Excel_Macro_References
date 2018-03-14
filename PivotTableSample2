@@ -1,0 +1,64 @@
+'Pivot table
+sPtName = "PivotTable1"
+sShName = "Temp"
+sTargShName = ActiveSheet.Name
+
+'get last cell address, check if the header is empty
+colToCheck = Range(lastCellAdd).Column
+checkHeaderVal:
+If Cells(1, colToCheck).Value = "" Then
+    colToCheck = colToCheck - 1
+    GoTo checkHeaderVal
+End If
+
+dtaSource = sTargShName & "!R1C1:R" & Range(lastCellAdd).Row & "C" & colToCheck
+
+'add new worksheet to pivot the table (make sure always after CommitAvailabilityDates)
+Sheets.Add(after:=Worksheets(Worksheets.Count)).Name = sShName
+
+ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:= _
+    dtaSource, Version:=xlPivotTableVersion12). _
+    CreatePivotTable TableDestination:=sShName & "!R3C1", TableName:=sPtName _
+    , DefaultVersion:=xlPivotTableVersion12
+Sheets(sShName).Select
+Cells(3, 1).Select
+
+'With ActiveSheet.PivotTables(sPtName).PivotFields("Part Name")
+With ActiveSheet.PivotTables(sPtName).PivotFields("Models")
+    .Orientation = xlRowField
+    .Position = 1
+End With
+
+With ActiveSheet.PivotTables(sPtName).PivotFields("Order ID")
+    .Orientation = xlRowField
+    .Position = 2
+End With
+
+With ActiveSheet.PivotTables(sPtName).PivotFields("CommitWW")
+    .Orientation = xlColumnField
+    .Position = 1
+End With
+
+ActiveSheet.PivotTables(sPtName).AddDataField ActiveSheet.PivotTables( _
+    sPtName).PivotFields("Allocated Qty"), "Sum of Allocated Qty", xlSum
+
+With ActiveSheet.PivotTables(sPtName)
+    .InGridDropZones = True
+    .RowAxisLayout xlTabularRow
+End With
+
+'paste as values
+Cells.Copy
+Range("A1").PasteSpecial Paste:=xlPasteValues
+Application.CutCopyMode = False
+
+'Delete first three rows
+Rows("1:3").EntireRow.Delete
+
+'for blank A column fields, copy the cell above
+Range(Cells(1, 1), Cells(Range(lastCellAdd).Row, 1)).SpecialCells(xlCellTypeBlanks).FormulaR1C1 = "=R[-1]C"
+
+'paste as values
+Cells.Copy
+Range("A1").PasteSpecial Paste:=xlPasteValues
+Application.CutCopyMode = False
