@@ -1,0 +1,134 @@
+Attribute VB_Name = "HTML_Convertor"
+Sub generateHTMLEmail(ByVal nTxtBox As Integer)
+    Dim testShape As Shape
+    Set mainWSD = ThisWorkbook.Sheets("Macro")
+    Set testShape = mainWSD.Shapes("txtTest")
+    testShape.TextFrame.Characters.Text = "<html><body> "
+    
+    Call convertBoxToHTML("txtBody" & nTxtBox)
+    testShape.TextFrame.Characters.Text = testShape.TextFrame.Characters.Text & "<br /><br /> "
+    Call convertBoxToHTML("txtSignature1")
+    
+    testShape.TextFrame.Characters.Text = testShape.TextFrame.Characters.Text & "</body></html> "
+End Sub
+Sub test()
+    'Set a = Sheets("Macro").Shapes("txtTest")
+    Sheets("Macro").Shapes("txtTest").Visible = False
+End Sub
+Function biuText(ByVal nStr As String, ByVal B As Boolean, ByVal i As Boolean, ByVal u As Boolean) As String
+'HTML Bold, Italic, Underline
+Dim nOut As String
+    nOut = nStr
+    If B Then nOut = "<b>" & nOut & "</b>"
+    If i Then nOut = "<i>" & nOut & "</i>"
+    If u Then nOut = "<u>" & nOut & "</u>"
+    biuText = nOut
+End Function
+
+Sub HTMLConvertor(ByVal sLen As Single, ByVal eLen As Single, ByVal txtBoxName As String)
+'Convert text to HTML then append into txtTest TextBox
+
+Dim nLen As Single, tLen As Single, contLen As Single
+Dim tempOut As String
+Dim txtShape As Shape, testShape As Shape
+Dim B As Boolean, i As Boolean, u As Boolean
+Dim nStr As String, fontName As String, hexColor As String
+Dim fontSize As Single, colorCode As Single
+    
+    Set mainWSD = ThisWorkbook.Sheets("Macro")
+    Set txtShape = mainWSD.Shapes(txtBoxName)
+    Set testShape = mainWSD.Shapes("txtTest")
+
+    tLen = Len(txtShape.TextFrame.Characters(Start:=sLen, Length:=eLen).Text)
+    If tLen = 0 Then Exit Sub
+
+    contLen = Len(testShape.TextFrame.Characters.Text)
+    fontSize = Application.RoundUp((txtShape.TextFrame.Characters(Start:=sLen, Length:=eLen).Font.Size / 12 * 3), 0)
+    fontName = txtShape.TextFrame.Characters(Start:=sLen, Length:=eLen).Font.Name
+    colorCode = CSng(txtShape.TextFrame.Characters(Start:=sLen, Length:=eLen).Font.Color)
+    hexColor = ColorConvertor(colorCode)
+    
+    tempOut = "<font size=""" & fontSize & """ face = """ & fontName & """ color=""" & hexColor & """>"
+    
+    If txtShape.TextFrame.Characters(Start:=sLen, Length:=eLen).Font.Bold = True Then B = True
+    If txtShape.TextFrame.Characters(Start:=sLen, Length:=eLen).Font.Italic = True Then i = True
+    If txtShape.TextFrame.Characters(Start:=sLen, Length:=eLen).Font.Underline = "2" Then u = True
+    nStr = txtShape.TextFrame.Characters(Start:=sLen, Length:=eLen).Text
+    tempOut = tempOut & biuText(nStr, B, i, u)
+
+    tempOut = tempOut & "</font>"
+    
+    tempOut = Replace(tempOut, vbLf, "<br />")
+    tempOut = Replace(tempOut, "  ", "&nbsp; ")
+    
+    contLen = Len(testShape.TextFrame.Characters.Text)
+    testShape.TextFrame.Characters(Start:=contLen).Text = tempOut & " "
+    
+End Sub
+
+Sub convertBoxToHTML(ByVal txtBoxName As String)
+
+Dim txtBox As String
+Dim nLen As Single, sLen As Single, eLen As Single, tLen As Single, contLen As Single
+Dim setting As String, setting1 As String, setting2 As String, nUnderline As String
+Dim nBold As Boolean, nItalic As Boolean
+Dim nSize As String, nFont As String, nColor As String
+Dim txtShape As Shape, testShape As Shape
+
+    txtBox = txtBoxName
+    
+    Set mainWSD = ThisWorkbook.Sheets("Macro")
+    Set txtShape = mainWSD.Shapes(txtBox)
+    
+    tLen = Len(txtShape.TextFrame.Characters.Text)
+    If tLen = 0 Then Exit Sub
+        eLen = 0
+        sLen = 1
+        setting1 = ""
+        setting2 = ""
+        For nLen = 1 To tLen
+                        
+            nBold = txtShape.TextFrame.Characters(Start:=nLen, Length:=1).Font.Bold
+            nItalic = txtShape.TextFrame.Characters(Start:=nLen, Length:=1).Font.Italic
+            nUnderline = txtShape.TextFrame.Characters(Start:=nLen, Length:=1).Font.Underline
+            nColor = txtShape.TextFrame.Characters(Start:=nLen, Length:=1).Font.Color
+            nSize = CStr(txtShape.TextFrame.Characters(Start:=nLen, Length:=1).Font.Size)
+            nFont = txtShape.TextFrame.Characters(Start:=nLen, Length:=1).Font.Name
+                
+            'setting = setting & "D"
+            If nBold = True Then setting = setting & "B"
+            'setting = setting & "L"
+            If nItalic = True Then setting = setting & "I"
+            'setting = setting & "V"
+            If nUnderline = "2" Then setting = setting & "U"
+
+            setting = setting & nColor
+            setting = setting & nSize
+            setting = setting & nFont
+                
+            setting1 = setting
+            If setting2 = "" Then setting2 = setting
+            setting = ""
+            
+            If txtShape.TextFrame.Characters(Start:=nLen, Length:=1).Text = vbLf Then
+                Call HTMLConvertor(sLen, eLen, txtBox)
+                sLen = nLen
+                eLen = 1
+                setting2 = setting1
+            Else
+                If setting1 <> setting2 Then
+                    Call HTMLConvertor(sLen, eLen, txtBox)
+                    sLen = nLen
+                    eLen = 1
+                    setting2 = setting1
+                Else
+                    eLen = eLen + 1
+                End If
+            End If
+        
+            If nLen = tLen Then
+                Call HTMLConvertor(sLen, eLen, txtBox)
+            End If
+        Next
+        
+End Sub
