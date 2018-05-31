@@ -1,0 +1,25 @@
+Sub CalculateTimeElapsed()
+
+'This sub calculates the time it takes to run a code
+
+Dim dStart As Date
+Dim dDiff As Date
+Dim sTimePassed As String
+
+'catch macro start time
+dStart = Now
+
+'***************************************************
+'***************INSERT CODE HERE********************
+'***************************************************
+
+Application.Wait (Now + TimeValue("00:00:01"))
+dDiff = Now - dStart
+
+'Determine how long code took to run
+sTimePassed = Format(dDiff, "hh:mm:ss")
+
+'Notify user
+MsgBox "This code ran successfully in " & sTimePassed, vbInformation
+
+End Sub
