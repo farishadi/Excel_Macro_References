@@ -12,7 +12,7 @@ Set copyRange = Nothing
 
 'on error to suppress errors from clicking cancel
 On Error Resume Next
-Set copyRange = Application.InputBox("Please select the " & sKeyword & " column manually.", sKeyword & " Column selection", , , , , , 8)
+Set copyRange = Application.InputBox("Please select the " & sKeyword & " column(s) manually.", sKeyword & " Column(s) selection", , , , , , 8)
 On Error GoTo 0
 
 'target workbook needed, otherwise will switch workbooks, Excel2016 bug
