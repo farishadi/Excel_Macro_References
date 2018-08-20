@@ -1,0 +1,155 @@
+Optimize Slow VBA Code. Speeding Up Slow Excel VBA Code (Sourced from http://www.ozgrid.com/VBA/SpeedingUpVBACode.htm)
+
+Avoid the use of Copy and Paste whenever Possible:
+Sub NoCopyAndPaste()
+  'Instead of:
+  Sheet1.Range("A1:A200").Copy
+  Sheet2.Range("B1").pasteSpecial
+  Application.CutCopyMode=False'Clear Clipboard
+  
+  'Use:
+  'By-passes the Clipboard
+  Sheet1.Range("A1:A200").Copy Destination:=Sheet2.Range("B1")
+  
+  'Or, if only values are needed:
+  Sheet2.Range("B1:B200").Value= Sheet1.Range("A1:A200").Value
+
+  'Or, if only formulas are needed:
+  Sheet2.Range("B1:B200").Formula = Sheet1.Range("A1:A200").Formula
+
+  'See also FormulaArray and FormulaR1C1 etc
+  'Instead of:
+  Sheet1.Range("A1:A200").Copy
+  Sheet1.Range("A1:A200").PasteSpecial xlPasteValues
+  Application.CutCopyMode=False'Clear Clipboard
+  
+  'Use:
+  Sheet1.Range("A1:A200") = Sheet1.Range("A1:A200").Value
+End Sub
+
+
+Speed up code and stop screen flickering:
+
+Sub NoScreenRePainting()
+  Application.ScreenUpdating=False
+  'Your code here.
+  Application.ScreenUpdating=True
+End Sub
+
+
+Preventing calculation while executing code:
+Sub NoCalculations()
+  Application.Calculation = xlCalculationManual
+	'Your code here.
+  Application.Calculation = xlCalculationAutomatic
+End Sub
+
+
+Speeding up code if you have Worksheet or Workbook Events. Also stops endless loops in Events
+Sub StopAllEvents()
+  Application.EnableEvents = False
+  'Your code here.
+  Application.EnableEvents = True
+End Sub
+
+
+Use the With Statement when working with Objects.
+Sub WithARange()
+  With Range("A1")
+    .Value = 100
+    .Font.Bold = True
+    .Interior.ColorIndex = 6
+    .Copy Destination:=Range("B1")
+  End With
+End Sub
+
+
+Use VbNullString instead of = "" When needing to default a String variable back to it's default of "" use:
+Sub EmptyText()
+  Dim strWords As String
+  strWords = "Cats"
+  MsgBox strWords
+  
+  strWords = vbNullString
+  MsgBox strWords
+End Sub
+
+
+Inserting a Relative formula into a range of cells: Faster than AutoFill or Copy.
+Sub NoAutoFillOrCopy()
+  Range("A1:A200").FormulaR1C1 = "=SUM(RC[1]:RC[5])"
+End Sub
+
+Tip: To get a formula, type it in any cell then select the cell, go Tools>Macro>Record new macro and record a macro pushing F2 then Enter.
+
+
+Always declare your variables correctly! 
+
+To quickly view a variables definition:
+Select the variable that you want the definition for. 
+Go to View>Definition (Shift+F2)
+
+To return to your previous position:
+Go to View>Last Postition (Ctrl+Shift+F2).
+
+
+Release memory from Object variables:
+Sub ReleaseObjectMemory()
+
+'Could be any variable of the Object type
+  Dim wSheet as Worksheet
+
+'Set Object variable
+  Set wSheet = Sheet1
+  'Your code here.
+
+'Release memory
+  Set wSheet = Nothing
+End Sub
+
+
+Don't get caught in the Loop. 
+Follow this link (http://www.ozgrid.com/VBA/VBALoops.htm) to see why Loops should (and usually can) be avoided.
+
+Avoid If, Else whenever possible
+More often than not people would use an If, Else Statement to test whether a condition is TRUE or FALSE. There is however a slightly faster (and less typing) method. The first example shows the common method, while the second shows a faster method. Of course in such a small example the difference is not noticeable.
+
+Sub TrueOrFalseSlower()
+  Dim bYesNo As Boolean
+  Dim i As Integer
+  
+  If i = 5 Then
+    bYesNo = True
+  Else
+    bYesNo = False
+  End If
+  MsgBox bYesNo
+End Sub
+
+Here's a better way!
+Sub TrueOrFalseFaster()
+  Dim bYesNo As Boolean
+  Dim i As Integer
+
+  bYesNo = (i = 5)
+  MsgBox bYesNo
+End Sub
+
+
+Another common need is to toggle a variable between True and False depending on a condition. For example:
+Sub ToggleTrueOrFalseSlower()
+  Dim bYesNo As Boolean
+  If bYesNo = False Then
+    bYesNo = True
+  Else
+    bYesNo = False
+  End If
+  MsgBox bYesNo
+End Sub
+
+Here's a much better way
+Sub ToggleTrueOrFalseFaster()
+  Dim bYesNo As Boolean
+  bYesNo = Not bYesNo
+  MsgBox bYesNo
+End Sub
