@@ -1,0 +1,14 @@
+'These combination of subs allows for combobox updating without triggring the OnChange function
+
+Public bTriggerChange As Boolean
+
+Private Sub ComboBox2_DropButtonClick()
+    bTriggerChange = True
+End Sub
+
+Private Sub ComboBox2_Change()
+    If bTriggerChange = True And ComboBox2.Value <> -1 Then
+        'Whatever code to run once the selection is made, instead of when the combobox values is being updated
+        bTriggerChange = False
+    End If
+End Sub
