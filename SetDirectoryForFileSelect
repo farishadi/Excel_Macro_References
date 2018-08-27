@@ -1,0 +1,6 @@
+'library code to allow GetOpenFile to go directly to server filepath
+#If VBA7 Then
+    Declare PtrSafe Function SetCurrentDirectory Lib "kernel32" Alias "SetCurrentDirectoryA" (ByVal lpPathName As String) As LongPtr
+#Else
+    Declare Function SetCurrentDirectory Lib "kernel32" Alias "SetCurrentDirectoryA" (ByVal lpPathName As String) As Long
+#End If
