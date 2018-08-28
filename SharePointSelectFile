@@ -1,9 +1,9 @@
+Public Function SharePointSelectFile(ByVal SharePointAddressString As String) As String
+
 'This function opens sharepoint folder destination to allow user to select workbook within sharepoint folder
 'function can be customized to point to sharepoint folder path and returns full selected workbook path
 'if user cancels workbook selection, string will return ""
 'Call method : FullSharePointWBAddress = SharePointSelectFile("Sharepoint folder directory")
-
-Public Function SharePointSelectFile(ByVal SharePointAddressString As String) As String
 
 Dim wbFromSharePoint As Workbook
 Dim vrtSelectedItem As Variant
