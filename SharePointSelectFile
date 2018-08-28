@@ -1,0 +1,25 @@
+'This function opens sharepoint folder destination to allow user to select workbook within sharepoint folder
+'function can be customized to point to sharepoint folder path and returns full selected workbook path
+'if user cancels workbook selection, string will return ""
+'Call method : FullSharePointWBAddress = SharePointSelectFile("Sharepoint folder directory")
+
+Public Function SharePointSelectFile(ByVal SharePointAddressString As String) As String
+
+Dim wbFromSharePoint As Workbook
+Dim vrtSelectedItem As Variant
+Dim sSharePointDir As String
+
+sSharePointDir = SharePointAddressString
+
+'use msoFileDialogOpen to link to Sharepoint folder
+With Application.FileDialog(msoFileDialogOpen)
+    .InitialFileName = sSharePointDir & "\" 'SharePoint address variable here
+    .AllowMultiSelect = False 'toggle multiple file(s) selection
+    .Show 'calls fileselect userform
+    
+    For Each vrtSelectedItem In .SelectedItems
+        Set SharePointSelectFile = vrtSelectedItem
+    Next
+End With
+
+End Function
