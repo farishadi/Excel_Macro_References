@@ -8,6 +8,8 @@ Public Function searchFor(ByVal mytext As String, Optional iSwitchInd As Integer
 '(1 for full match, 2 for partial matching, 3 for date searches, 4 for single column searching)
 'function also allows for triggering of automatic header change in case searchString is not found. (considerError = True)
 
+Dim found As Range
+Dim keepAdd As String
 Dim inputCells As Range
 
 If iSwitchInd = 1 Then
