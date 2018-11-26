@@ -1,6 +1,3 @@
-'************************************************************************************************************************************
-'******************************************************SIMPLE SEARCH FUNCTION********************************************************
-'************************************************************************************************************************************
 Public Function searchFor(ByVal mytext As String, Optional iSwitchInd As Integer = 1, Optional startRow As Integer, Optional endRow As Integer, Optional targCol As Integer, Optional considerError As Boolean = False) As String
 
 'this function looks for the first instance of the provided mytext in the activesheet
