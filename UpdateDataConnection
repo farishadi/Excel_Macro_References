@@ -1,0 +1,4 @@
+''********************* DATA CONNECTION UPDATES *********************
+''update all of the data connections
+'ActiveWorkbook.RefreshAll
+'Application.CalculateUntilAsyncQueriesDone
