@@ -10,7 +10,7 @@ Dim objFile As Object
 
 'point to sharepoint folder that contains the files
 'sharepoint path needs to be converted from "https://sharepoint drive/folder/another folder/another folder" to "//sharepoint drive/folder/another folder/another folder"
-sSPPath = "//sharepoint.gar.ith.intel.com@SSL/DavWWWRoot/sites/LKF_PDT/LKF A0 Sample"
+sSPPath = "//sharepoint drive/folder/another folder/another folder"
 
 'create File System Object
 Set objFSO = CreateObject("Scripting.FileSystemObject")
