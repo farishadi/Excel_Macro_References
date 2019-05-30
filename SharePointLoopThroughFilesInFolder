@@ -1,0 +1,27 @@
+'This sub loops through the files in a specified sharepoint folder. 
+'The folder address must be in the format specified otherwise VBA doesn't really like that. 
+
+Sub SharePointLoopThroughFilesInFolder()
+
+Dim sSPPath As String
+Dim objFSO As Object
+Dim objFolder As Object
+Dim objFile As Object
+
+'point to sharepoint folder that contains the files
+'sharepoint path needs to be converted from "https://sharepoint drive/folder/another folder/another folder" to "//sharepoint drive/folder/another folder/another folder"
+sSPPath = "//sharepoint.gar.ith.intel.com@SSL/DavWWWRoot/sites/LKF_PDT/LKF A0 Sample"
+
+'create File System Object
+Set objFSO = CreateObject("Scripting.FileSystemObject")
+
+'Use FSO object to get the folder pointed at by the directory
+Set objFolder = objFSO.GetFolder(sSPPath)
+
+'Loop through the files within the folder specified to get attributes
+For Each objFile In objFolder.Files
+    a = objFile.Name
+Next
+   
+End Sub
+
