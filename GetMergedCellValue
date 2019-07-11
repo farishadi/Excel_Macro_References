@@ -1,0 +1,1 @@
+sTargVal = Cells(a, b).MergeArea.Cells(1, 1).Value 'Where a and b are any cells within the merged cell range
