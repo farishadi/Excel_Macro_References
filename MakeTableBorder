@@ -1,7 +1,7 @@
-Public Sub MakeTableBorder(ByVal iStartRow As Integer, ByVal iStartCol As Integer, ByVal iEndRow As Integer, ByVal iEndCol As Integer)
+Public Sub MakeTableBorder(ByVal iStartRow As Integer, ByVal iStartCol As Integer, ByVal iEndRow As Integer, ByVal iEndCol As Integer, Optional ByVal bThickSwitch As Boolean = False)
 
 'function creates an all encompassing table line around the data with user provided:
-'Start Row, Start Column, End Row and End Column
+'Start Row, Start Column, End Row and End Column, Thick Switch
 
 With Range(Cells(iStartRow, iStartCol), Cells(iEndRow, iEndCol))
     .Borders(xlDiagonalDown).LineStyle = xlNone
@@ -11,43 +11,48 @@ With Range(Cells(iStartRow, iStartCol), Cells(iEndRow, iEndCol))
         .LineStyle = xlContinuous
         .ColorIndex = 0
         .TintAndShade = 0
-        .Weight = xlThin
+        If bThickSwitch = True Then .Weight = xlMedium Else .Weight = xlThin
     End With
     
     With .Borders(xlEdgeTop)
         .LineStyle = xlContinuous
         .ColorIndex = 0
         .TintAndShade = 0
-        .Weight = xlThin
+        If bThickSwitch = True Then .Weight = xlMedium Else .Weight = xlThin
     End With
     
     With .Borders(xlEdgeBottom)
         .LineStyle = xlContinuous
         .ColorIndex = 0
         .TintAndShade = 0
-        .Weight = xlThin
+        If bThickSwitch = True Then .Weight = xlMedium Else .Weight = xlThin
     End With
     
     With .Borders(xlEdgeRight)
         .LineStyle = xlContinuous
         .ColorIndex = 0
         .TintAndShade = 0
-        .Weight = xlThin
+        If bThickSwitch = True Then .Weight = xlMedium Else .Weight = xlThin
     End With
     
     With .Borders(xlInsideVertical)
         .LineStyle = xlContinuous
         .ColorIndex = 0
         .TintAndShade = 0
-        .Weight = xlThin
+        If bThickSwitch = True Then .Weight = xlMedium Else .Weight = xlThin
     End With
     
     With .Borders(xlInsideHorizontal)
         .LineStyle = xlContinuous
         .ColorIndex = 0
         .TintAndShade = 0
-        .Weight = xlThin
+        If bThickSwitch = True Then .Weight = xlMedium Else .Weight = xlThin
     End With
+    
+    If bThickSwitch = True Then
+        .Borders(xlInsideVertical).LineStyle = xlNone
+        .Borders(xlInsideHorizontal).LineStyle = xlNone
+    End If
 End With
 
 End Sub
