@@ -1,0 +1,29 @@
+Public Sub QueryCSVWithVBA()
+
+'Explanations can be found at : https://docs.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/scripting-articles/ms974559(v=msdn.10)?redirectedfrom=MSDN
+
+On Error Resume Next
+Const adOpenStatic = 3
+Const adLockOptimistic = 3
+Const adCmdText = &H1
+
+Set objConnection = CreateObject("ADODB.Connection")
+Set objRecordset = CreateObject("ADODB.Recordset")
+
+strPathtoTextFile = "C:\Databases\"
+
+objConnection.Open "Provider=Microsoft.Jet.OLEDB.4.0;" & _
+          "Data Source=" & strPathtoTextFile & ";" & _
+          "Extended Properties=""text;HDR=YES;FMT=FixedLength"""
+
+objRecordset.Open "SELECT * FROM PhoneList.txt", _
+          objConnection, adOpenStatic, adLockOptimistic, adCmdText
+
+Do Until objRecordset.EOF
+    Wscript.Echo "Name: " & objRecordset.Fields.Item("FirstName")
+    Wscript.Echo "Department: " & objRecordset.Fields.Item("LastName")
+    Wscript.Echo "Extension: " & objRecordset.Fields.Item("ID")
+    objRecordset.MoveNext
+Loop
+
+End Sub
