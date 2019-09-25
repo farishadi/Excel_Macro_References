@@ -1,6 +1,7 @@
 Sub AllEnvironVariables()
 
 'reference website : https://wellsr.com/vba/2019/excel/list-all-environment-variables-with-vba-environ/
+'Make sure to run in a new clear sheet
 
 Dim strEnviron As String
 Dim VarSplit As Variant
