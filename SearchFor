@@ -1,8 +1,8 @@
-Public Function searchFor(ByVal mytext As String, Optional iSwitchInd As Integer = 1, Optional startRow As Integer, Optional endRow As Integer, Optional targCol As Integer, Optional considerError As Boolean = False) As String
+Public Function searchFor(ByVal mytext As String, Optional iSwitchInd As Integer = 1, Optional startRow As Integer, Optional endRow As Integer, Optional startCol As Integer, Optional endCol As Integer, Optional considerError As Boolean = False) As String
 
 'this function looks for the first instance of the provided mytext in the activesheet
 'function allows approximate matching via flipping the iSwitchInd switch
-'(1 for full match, 2 for partial matching, 3 for date searches, 4 for single column searching)
+'(1 for full match, 2 for partial matching, 3 for date searches, 4 for single column searching, 5 for searching within a preset range)
 'function also allows for triggering of automatic header change in case searchString is not found. (considerError = True)
 
 Dim found As Range
@@ -16,7 +16,9 @@ ElseIf iSwitchInd = 2 Then
 ElseIf iSwitchInd = 3 Then
     Set found = ActiveSheet.UsedRange.Find(What:=mytext, LookIn:=xlFormulas, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
 ElseIf iSwitchInd = 4 Then
-    Set found = ActiveSheet.Range(Cells(startRow, targCol), Cells(endRow, targCol)).Find(What:=mytext, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
+    Set found = ActiveSheet.Range(Cells(startRow, startCol), Cells(endRow, startCol)).Find(What:=mytext, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
+ElseIf iSwitchInd = 5 Then
+    Set found = ActiveSheet.Range(Cells(startRow, startCol), Cells(endRow, endCol)).Find(What:=mytext, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
 End If
 
 'if found something
