@@ -2,7 +2,7 @@ Public Function searchFor(ByVal mytext As String, Optional iSwitchInd As Integer
 
 'this function looks for the first instance of the provided mytext in the activesheet
 'function allows approximate matching via flipping the iSwitchInd switch
-'(1 for full match, 2 for partial matching, 3 for date searches, 4 for single column searching, 5 for searching within a preset range)
+'(1 for full match, 2 for partial matching, 3 for date searches, 4 for searching within a Range)
 'function also allows for triggering of automatic header change in case searchString is not found. (considerError = True)
 
 Dim found As Range
@@ -16,8 +16,6 @@ ElseIf iSwitchInd = 2 Then
 ElseIf iSwitchInd = 3 Then
     Set found = ActiveSheet.UsedRange.Find(What:=mytext, LookIn:=xlFormulas, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
 ElseIf iSwitchInd = 4 Then
-    Set found = ActiveSheet.Range(Cells(startRow, startCol), Cells(endRow, startCol)).Find(What:=mytext, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
-ElseIf iSwitchInd = 5 Then
     Set found = ActiveSheet.Range(Cells(startRow, startCol), Cells(endRow, endCol)).Find(What:=mytext, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlRows, MatchCase:=False)
 End If
 
