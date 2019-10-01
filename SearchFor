@@ -1,4 +1,4 @@
-Public Function searchFor(ByVal mytext As String, Optional iSwitchInd As Integer = 1, Optional startRow As Integer, Optional endRow As Integer, Optional startCol As Integer, Optional endCol As Integer, Optional considerError As Boolean = False) As String
+Public Function searchFor(ByVal mytext As String, Optional iSwitchInd As Integer = 1, Optional startRow As Long, Optional endRow As Long, Optional startCol As Integer, Optional endCol As Integer, Optional considerError As Boolean = False) As String
 
 'this function looks for the first instance of the provided mytext in the activesheet
 'function allows approximate matching via flipping the iSwitchInd switch
