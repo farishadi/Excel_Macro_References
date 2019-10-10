@@ -1,0 +1,18 @@
+Public Sub exportToCSV()
+    
+'references:
+'1. : http://learnexcelmacro.com/wp/2017/09/save-excel-range-data-as-csv-file-through-excel-vba/
+'2. : https://stackoverflow.com/questions/8419828/how-to-create-a-separate-csv-file-from-vba
+
+Dim sFPathName As String
+Dim iFNum As Integer
+
+sFPathName = ThisWorkbook.Path & "\" & "CSV-Exported-File.csv"
+iFNum = FreeFile 'this is the actual CSV file declaration
+Open sFPathName For Output As #iFNum
+
+Print #iFNum, "test,test,test"
+
+Close #iFNum
+
+End Sub
