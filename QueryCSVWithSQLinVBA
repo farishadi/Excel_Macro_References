@@ -26,4 +26,10 @@ Do Until objRecordset.EOF
     objRecordset.MoveNext
 Loop
 
+'close database and clear recordsets
+objRecordset.Close
+Set objRecordset = Nothing
+objConnection.Close
+Set objConnection = Nothing
+
 End Sub
