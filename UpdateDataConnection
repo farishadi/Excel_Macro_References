@@ -1,4 +1,9 @@
-''********************* DATA CONNECTION UPDATES *********************
-''update all of the data connections
-'ActiveWorkbook.RefreshAll
-'Application.CalculateUntilAsyncQueriesDone
+'********************* DATA CONNECTION UPDATES *********************
+'update all of the data connections
+ActiveWorkbook.RefreshAll
+Application.CalculateUntilAsyncQueriesDone
+
+'if Application.CalculateUntilAsyncQueriesDone causes Excel to freeze and crash,
+'disable "Enable background refresh" option in Connection Properties.
+'Data (Ribbon) > Connections > (Select one connection) Properties > Uncheck "Enable background refresh"
+'or Alt+a+o > (Select one connection) Properties > Uncheck "Enable background refresh"
