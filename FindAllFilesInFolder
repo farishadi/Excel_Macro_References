@@ -1,0 +1,30 @@
+Public Function FindAllFilesInFolder() As String()
+
+'This functions gets into the specified folder, loops through all files and gets their names and pushes it all into an array
+
+Dim sDirectoryPath As String
+Dim fileSys As FileSystemObject
+Dim sFolderPath As Variant
+Dim objFile As File
+Dim lArrCtr As Long
+Dim asTemp() As String
+ReDim asTemp(0 To 0) As String
+
+'set up filesys objects and set path for files - change for your folder
+'sDirectoryPath = Environ("HOMEDRIVE") & Environ("HOMEPATH") & "\Downloads"
+sDirectoryPath = "test\test\test" 'filepath here
+Set fileSys = New FileSystemObject
+Set sFolderPath = fileSys.GetFolder(sDirectoryPath)
+
+'loop through each file and get name
+lArrCtr = 0
+For Each objFile In sFolderPath.Files
+    asTemp(lArrCtr) = objFile.Name
+    lArrCtr = lArrCtr + 1
+Next objFile
+
+Set fileSys = Nothing
+Set sFolderPath = Nothing
+Set objFile = Nothing
+
+End Function
