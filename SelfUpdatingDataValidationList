@@ -1,0 +1,15 @@
+This method gets an self-updating range and last row of a column, useful for when you want an data validation list 
+without having to prompt for a refresh constantly. 
+
+To create a self updating data validation list using this method, follow these steps.
+
+1. FORMULAS ribbon > Name Manager > New
+2. Name the range to refer to in Data Validation later. Recommend to key in name without spacing: Test_Test
+3. In the "Refers To" section, use this formula: =OFFSET(SheetName!$A$10,0,0,COUNTA(SheetName!$A:$A),1). 
+   Substitute "$A$10" with first row of target range and "$A:$A" with target range column.
+4. Click "OK"
+5. DATA ribbon > Data Validation
+6. Allow = "List", Source = "=Test_Test" (Named range), Click "OK"
+
+Cell with data validation should now have a self updating list. When you add a new value in the list reference, 
+the data validation should update itself too.
