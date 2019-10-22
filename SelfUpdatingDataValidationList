@@ -1,3 +1,5 @@
+Reference: https://www.ablebits.com/office-addins-blog/2015/02/11/excel-offset-function/
+
 This method gets an self-updating range and last row of a column, useful for when you want an data validation list 
 without having to prompt for a refresh constantly. 
 
@@ -10,6 +12,8 @@ To create a self updating data validation list using this method, follow these s
 4. Click "OK"
 5. DATA ribbon > Data Validation
 6. Allow = "List", Source = "=Test_Test" (Named range), Click "OK"
+
+NOTE: Naming the range is not necessary. Putting the formula directly into the Source field is fine too.
 
 Cell with data validation should now have a self updating list. When you add a new value in the list reference, 
 the data validation should update itself too.
