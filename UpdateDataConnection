@@ -6,5 +6,5 @@ Application.CalculateUntilAsyncQueriesDone
 'if Application.CalculateUntilAsyncQueriesDone causes Excel to freeze and crash,
 'disable "Enable background refresh" option in Connection Properties.
 'Data (Ribbon) > Connections > (Select one connection) Properties > Uncheck "Enable background refresh"
-'or Alt+a+o > (Select one connection) Properties > Uncheck "Enable background refresh"
+'or Alt+A+O > (Select one connection) Properties > Uncheck "Enable background refresh"
 'reference: https://www.reddit.com/r/vba/comments/611xqd/applicationcalculateuntilasyncqueriesdone_causes/
