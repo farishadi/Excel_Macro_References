@@ -1,0 +1,14 @@
+Dim avColArr() As Variant
+ReDim avColArr(0 To 0) As Variant
+
+lArrCtr = 0
+For i = ColumnStartRange To ColumnEndRange
+    avColArr(lArrCtr) = lArrCtr + 1
+    lArrCtr = lArrCtr + 1
+    ReDim Preserve avColArr(0 To lArrCtr) As Variant
+Next i
+
+ReDim Preserve avColArr(0 To UBound(avColArr) - 1) As Variant
+ActiveSheet.Range(Cells(1,1),Cells(1,1)).RemoveDuplicates Columns:=(avColArr), Header:=xlNo
+
+'reference: https://www.mrexcel.com/board/threads/removing-duplicates-dynamic-columns-vba.470729/
