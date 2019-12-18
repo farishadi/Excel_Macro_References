@@ -6,14 +6,14 @@ Public Sub deleteXSheets(ByVal sShName As String, Optional bApprox As Boolean)
 
 Dim sSearchStr As String
 
-deleteInd = MsgBox("Are you sure you want to delete all of the " & sShName & " sheets?", vbYesNo, sShName & " Sheets Deletion")
+deleteInd = MsgBox("This function requires deletion of all " & sShName & " sheets. Are you sure you want to delete all of the " & sShName & " sheets?", vbYesNo, sShName & " Sheets Deletion")
 If deleteInd = vbYes Then
     Application.DisplayAlerts = False
     
     If bApprox = True Then
-        sSearchStr = sShName
-    Else
         sSearchStr = "*" & sShName & "*"
+    Else
+        sSearchStr = sShName
     End If
     
     'delete all sheets with the keyword
@@ -24,11 +24,11 @@ If deleteInd = vbYes Then
     Next i
     
     Application.DisplayAlerts = True
-    MsgBox "Done!"
+    'MsgBox "Done!"
     
 Else
     ThisWorkbook.Sheets("Macro").Activate
-    MsgBox "User cancelled. Macro will now terminate."
+    MsgBox "User cancelled. To avoid deletion for all of the " & sShName & " sheets you have, rename them to something that does not contain the keyword " & sShName & " and re-run the function. Macro will now terminate."
     End
 End If
 
