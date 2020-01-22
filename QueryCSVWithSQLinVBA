@@ -12,7 +12,13 @@ Set objRecordset = CreateObject("ADODB.Recordset")
 
 strPathtoTextFile = "C:\Databases\"
 
-objConnection.Open "Provider=Microsoft.Jet.OLEDB.4.0;" & _
+
+'For some reason Jet isn't compitable across ALL devices. Will have to switch to ACE 12.0
+'objConnection.Open "Provider=Microsoft.Jet.OLEDB.4.0;" & _
+'          "Data Source=" & strPathtoTextFile & ";" & _
+'          "Extended Properties=""text;HDR=YES;FMT=FixedLength"""
+          
+objConnection.Open "Provider=Microsoft.ACE.OLEDB.12.0;" & _
           "Data Source=" & strPathtoTextFile & ";" & _
           "Extended Properties=""text;HDR=YES;FMT=FixedLength"""
 
