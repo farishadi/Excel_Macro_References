@@ -3,6 +3,7 @@
 'A1 is the address of the cell to start adding columns to
 '3  is the number of columns to add
 [A1].Resize(, 3).EntireColumn.Insert
+Cells(1, 1).Resize(, 3).EntireColumn.Insert
 
 'Call Method :
 a = addNewCol("A1", True)
