@@ -1,3 +1,9 @@
+'Alternative single line dynamic code
+'Code will add column to the right of the address, taking left cells as format
+'A1 is the address of the cell to start adding columns to
+'3  is the number of columns to add
+[A1].Resize(, 3).EntireColumn.Insert
+
 'Call Method :
 a = addNewCol("A1", True)
 'where a returns the address of the newly added column
