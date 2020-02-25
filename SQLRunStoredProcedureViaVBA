@@ -15,7 +15,7 @@ Dim parameterSize As Long
 sServer = a 'Server Name
 sDbase = b 'Database Name
 sUName = c 'DBAdmin Username
-sPWord = d 'DBAdmin Username
+sPWord = d 'DBAdmin Password
 
 'connect to database with provided credentials
 Set dbConnctn = New ADODB.Connection
