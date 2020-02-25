@@ -2,7 +2,7 @@ Public Sub RunStoredProc()
 
 HtmlContent = "Hello," + vbLf + "Below are the Material number that need a fair report." + vbLf + sArgs + vbLf + "Thanks and Regards."
 
-'connect SQL Server to send emel
+'connect SQL Server to send email
 Dim dbRecSet As New ADODB.Recordset 'declare recordset for pulling and copying of data from database
 Dim dbConnctn As ADODB.Connection 'declare connection to connect to database
 Dim dbComnd As ADODB.Command 'declare commands to pull out data
