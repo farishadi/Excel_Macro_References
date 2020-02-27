@@ -1,5 +1,6 @@
 Public Sub RunStoredProc()
 
+'This Sub requires reference to the Microsoft ActiveX Data Objects (ADODB) Library. Get the one with the biggest Version number and you should be okay.
 HtmlContent = "Hello," + vbLf + "Below are the Material number that need a fair report." + vbLf + sArgs + vbLf + "Thanks and Regards."
 
 'connect SQL Server to send email
