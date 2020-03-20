@@ -1,5 +1,3 @@
-'BUTTONS MODULE
-
 'XBrowse variables
 Public sFPth1 As String
 Public wbX As Workbook
