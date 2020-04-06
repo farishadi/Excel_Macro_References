@@ -1,0 +1,6 @@
+' Referenced from : https://officetricks.com/excel-vba-get-username-windows-system/
+' This code helps get the current logged on User's ID or Username, depending on how your computer is set up by you/your admin
+
+a = Environ$("username") 'Returns user ID
+b = Environ("Username")  'Returns user ID
+c = Application.UserName 'Returns user name (for corporate accounts, it seems to follow Skype for Business format)
