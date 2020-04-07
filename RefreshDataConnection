@@ -1,0 +1,28 @@
+Public Sub refreshConnections()
+
+'display alerts is stopping credentials challenge to appear.
+'disable display alerts temporarily for data query and enable after
+
+Application.DisplayAlerts = True
+'********************* DATA CONNECTION UPDATES *********************
+ThisWorkbook.Queries.FastCombine = True 'POTENTIAL SECURITY ISSUE
+
+'include error handler as sometimes data queries have credential problems.
+On Error GoTo refreshErrHandler
+ThisWorkbook.Connections("Query - QueryName").Refresh
+'Application.CalculateUntilAsyncQueriesDone
+Application.DisplayAlerts = False
+
+Exit Sub
+
+refreshErrHandler:
+MsgBox "Err message", vbCritical, "Error Issue"
+End
+
+End Sub
+
+'if Application.CalculateUntilAsyncQueriesDone causes Excel to freeze and crash,
+'disable "Enable background refresh" option in Connection Properties.
+'Data (Ribbon) > Connections > (Select one connection) Properties > Uncheck "Enable background refresh"
+'or Alt+A+O > (Select one connection) Properties > Uncheck "Enable background refresh"
+'reference: https://www.reddit.com/r/vba/comments/611xqd/applicationcalculateuntilasyncqueriesdone_causes/
