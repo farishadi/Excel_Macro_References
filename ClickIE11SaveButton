@@ -1,3 +1,6 @@
+'This function requires a reference to the UIAutomationClient
+'Tools > References > Check "UIAutomationClient"
+
 'library code
 #If VBA7 Then
     Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
