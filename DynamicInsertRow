@@ -5,6 +5,6 @@ Public Sub DynamicInsertRow(ByVal TopRowAdd As String, ByVal NumOfRows As Long)
 
 'Sample call : Call DynamicInsertRow(Cells(53, 1).Address, 2)
 
-Rows(Range(TopRowAdd).Row & ":" & Range(TopRowAdd).Row + NumOfRows).Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove
+Rows(Range(TopRowAdd).Row + 1 & ":" & Range(TopRowAdd).Row + NumOfRows).Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove
 
 End Sub
