@@ -1,6 +1,6 @@
-Sub DynamicInsertRow(ByVal TopRowAdd As String, ByVal NumOfRows As Long)
+Public Sub DynamicInsertRow(ByVal TopRowAdd As String, ByVal NumOfRows As Long)
 
-'This sub accetps two parameters: TopRowAdd and NumOfRows to dynamically add x
+'This sub accepts two parameters: TopRowAdd and NumOfRows to dynamically add x
 'amount of rows underneath the address provided in TopRowAdd address string
 
 'Sample call : Call DynamicInsertRow(Cells(53, 1).Address, 2)
