@@ -1,0 +1,14 @@
+'Useful algorthms for locked sheet, to allow sorting, filtering, grouping etc
+
+'add allowed edit range to allow users to sort sheet
+Sheets("Main").Protection.AllowEditRanges.Add Title:="AllowSort", Range:=Range(Cells(lDataRow_Main + 1, 1), Cells(lLRow_Main, lLCol_Main))
+
+'password protect the sheet
+Sheets("Main").Protect Password:="password", DrawingObjects:=True, Contents:=True, Scenarios:=True, AllowSorting:=True, AllowFiltering:=True, UserInterfaceOnly:=True, _
+    AllowFormattingColumns:=True, AllowFormattingRows:=True
+    
+'enable grouping
+Sheets("Main").EnableOutlining = True
+
+'disable selecting locked cells
+Sheets("Main").EnableSelection = xlUnlockedCells
