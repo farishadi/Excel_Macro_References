@@ -1,6 +1,6 @@
 'Useful algorthms for locked sheet, to allow sorting, filtering, grouping etc
 
-'unprotect the sheet
+'*** UNPROTECT SHEET AND CHECK FOR ALLOWED EDIT RANGES ***
 Sheets("Main").Unprotect "password"
 
 'check if the sheet has edit ranges (to allow sorting through cell lock)
@@ -9,7 +9,9 @@ If Sheets("Main").Protection.AllowEditRanges.Count <> 0 Then
         ActiveSheet.Protection.AllowEditRanges(i).Delete
     Next i
 End If
+'*********************************************************
 
+'*** LOCK SHEET, ALLOW SORTING AND GROUPING, BUT DISALLOW LOCKED CELLS SELECTION ***
 'add allowed edit range to allow users to sort sheet
 Sheets("Main").Protection.AllowEditRanges.Add Title:="AllowSort", Range:=Range(Cells(lDataRow_Main + 1, 1), Cells(lLRow_Main, lLCol_Main))
 'reference : https://stackoverflow.com/questions/10197772/how-to-lock-specific-cells-but-allow-filtering-and-sorting/15390698#15390698
@@ -24,8 +26,14 @@ Sheets("Main").Protect Password:="password", DrawingObjects:=True, Contents:=Tru
 'enable grouping
 Sheets("Main").EnableOutlining = True
 
-'if need to remove grouping, 
-Range(Cells(lHeadRow_Main, 1), Cells(Range(lastCellAdd).Row, Range(lastCellAdd).Column)).ClearOutline
-
 'disable selecting locked cells
 Sheets("Main").EnableSelection = xlUnlockedCells
+************************************************************************************
+
+
+'To remove grouping, 
+Range(Cells(lHeadRow_Main, 1), Cells(Range(lastCellAdd).Row, Range(lastCellAdd).Column)).ClearOutline
+
+'To reset cell widths and height
+Cells.UseStandardHeight = True
+Cells.UseStandardWidth = True
