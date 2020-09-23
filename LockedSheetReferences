@@ -12,6 +12,7 @@ End If
 
 'add allowed edit range to allow users to sort sheet
 Sheets("Main").Protection.AllowEditRanges.Add Title:="AllowSort", Range:=Range(Cells(lDataRow_Main + 1, 1), Cells(lLRow_Main, lLCol_Main))
+'reference : https://stackoverflow.com/questions/10197772/how-to-lock-specific-cells-but-allow-filtering-and-sorting/15390698#15390698
 
 'password protect the sheet
 Sheets("Main").Protect Password:="password", DrawingObjects:=True, Contents:=True, Scenarios:=True, AllowSorting:=True, AllowFiltering:=True, UserInterfaceOnly:=True, _
