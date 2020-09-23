@@ -24,5 +24,8 @@ Sheets("Main").Protect Password:="password", DrawingObjects:=True, Contents:=Tru
 'enable grouping
 Sheets("Main").EnableOutlining = True
 
+'if need to remove grouping, 
+Range(Cells(lHeadRow_Main, 1), Cells(Range(lastCellAdd).Row, Range(lastCellAdd).Column)).ClearOutline
+
 'disable selecting locked cells
 Sheets("Main").EnableSelection = xlUnlockedCells
