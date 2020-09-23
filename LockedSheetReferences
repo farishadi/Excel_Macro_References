@@ -1,5 +1,15 @@
 'Useful algorthms for locked sheet, to allow sorting, filtering, grouping etc
 
+'unprotect the sheet
+Sheets("Main").Unprotect "password"
+
+'check if the sheet has edit ranges (to allow sorting through cell lock)
+If Sheets("Main").Protection.AllowEditRanges.Count <> 0 Then
+    For i = 1 To Sheets("Main").Protection.AllowEditRanges.Count
+        ActiveSheet.Protection.AllowEditRanges(i).Delete
+    Next i
+End If
+
 'add allowed edit range to allow users to sort sheet
 Sheets("Main").Protection.AllowEditRanges.Add Title:="AllowSort", Range:=Range(Cells(lDataRow_Main + 1, 1), Cells(lLRow_Main, lLCol_Main))
 
