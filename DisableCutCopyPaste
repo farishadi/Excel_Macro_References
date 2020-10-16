@@ -1,6 +1,7 @@
 Private Sub Workbook_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Excel.Range)
 
 'This sub allows devs to control what happens when users use the cut, copy or paste shortcuts
+'Sub runs an interrupt everytime copy commands are called in the code as well. Something to be careful of.
 'Needs to be placed in the ThisWorkbook Excel Objects section of your project
 
 Select Case Application.CutCopyMode
