@@ -13,7 +13,7 @@ Case Is = xlCut
 End Select
 
 'Sample action:
-'MsgBox "Please DO NOT Cut and Paste. Use Copy and Paste; then delete the source."
+'MsgBox "Please DO NOT Cut and Paste. Use Copy and Paste; then delete the source.", vbCritical, "WARNING!"
 'Application.CutCopyMode = False 'clear clipboard and cancel cut
 
 End Sub
