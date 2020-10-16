@@ -1,0 +1,19 @@
+Private Sub Workbook_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Excel.Range)
+
+'This sub allows devs to control what happens when users use the cut, copy or paste shortcuts
+'Needs to be placed in the ThisWorkbook Excel Objects section of your project
+
+Select Case Application.CutCopyMode
+Case Is = False
+    'do something
+Case Is = xlCopy
+    'do something
+Case Is = xlCut
+    'do something
+End Select
+
+'Sample action:
+'MsgBox "Please DO NOT Cut and Paste. Use Copy and Paste; then delete the source."
+'Application.CutCopyMode = False 'clear clipboard and cancel cut
+
+End Sub
