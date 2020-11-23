@@ -18,3 +18,4 @@ End If
 End Function
 
 lLastRow = Cells(Rows.Count, 1).End(xlUp).Row
+lLastColumn = Cells(1, Columns.Count).End(xlToRight).Column
