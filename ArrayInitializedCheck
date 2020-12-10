@@ -1,0 +1,43 @@
+'reference for this whole thing can be found at:
+'- Short Code sample:       https://riptutorial.com/excel-vba/example/30824/check-if-array-is-initialized--if-it-contains-elements-or-not--
+'- Longer explanation 1:    https://stackoverflow.com/a/14382846
+'- Longer explanation 2:    https://www.vbforums.com/showthread.php?654880-How-do-I-tell-if-an-array-is-quot-empty-quot&p=4040234&viewfull=1#post4040234
+
+'--- Example 1: ---
+'asTestEmpty is considered an empty array. Depending on the datatype, its emptiness can be checked either simply by writing some simple conditions and checks or
+'more complex by looping through the indexes and checking the values one at a time. If its a string, can also join to see what the final string is regardless of
+'array size.
+Dim asTestEmpty() As String
+ReDim asTestEmpty(0 To 0) As String
+
+'*********************************************************************************************************************************************************************
+
+'--- Example 2: ---
+'asTestUninitialized however, is considered uninitialized. This array cannot be looped through and no conditions will work on it as it has no values to apply the
+'conditions to. Best case is by using a triple Not if condition
+Dim asTestUninitialized() As String
+
+'--- Solution 1: ---
+If Not Not asTestUninitialized Then MsgBox UBound(asTestUninitialized) Else MsgBox "asTestUninitialized not initialised"
+
+'--- Solution 2: ---
+'basically same as Solution 1, just with a clearer <>0 condition
+If (Not Not asTestUninitialized) <> 0 Then
+    ' Array has been initialized, so you're good to go.
+Else
+    ' Array has NOT been initialized
+End If
+
+'--- Solution 3: ---
+'basically same as Solution 1, but with one less Not and a condition change to = -1 and initialize/not initialize priority
+If (Not asTestUninitialized) = -1 Then
+    ' Array has NOT been initialized
+Else
+    ' Array has been initialized, so you're good to go.
+End If
+
+'In VB, for whatever reason, Not myArray returns the SafeArray pointer. For uninitialized arrays, this returns -1. You can Not this to XOR it with -1, thus returning zero, if you prefer.
+
+'               (Not myArray)   (Not Not myArray)
+'Uninitialized       -1                 0
+'Initialized    -someBigNumber   someOtherBigNumber
