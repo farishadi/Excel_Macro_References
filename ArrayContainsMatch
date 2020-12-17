@@ -1,0 +1,21 @@
+Public Sub ArrayContains()
+
+'Checks if array contains variable (Exact match and Caps sensitive), returns True/False
+Dim aTestArr(0 To 1) As String
+aTestArr(0) = "TestString1"
+aTestArr(1) = "TestString2"
+
+a = "TestString1"
+b = "UnrelatedString1"
+
+ArrayContainsReturnsTrue = Not IsError(Application.Match(a, aTestArr, 0))
+ArrayContainsReturnsFalse = Not IsError(Application.Match(b, aTestArr, 0))
+
+'match keys from one array to get value from another array
+Dim aTestArr2(0 To 1) As String
+aTestArr2(0) = "First value"
+aTestArr2(1) = "Second value"
+
+ReturnsFirstValue = aTestArr2(Application.Match(a, aTestArr, 0) - 1)
+
+End Sub
