@@ -1,0 +1,21 @@
+'This formula is applied into the data validation code for a cell, it takes the whole list from start to end as the options in the data validation dropdown.
+'Start row can be specified, but last row will be automatically calculated because of the formula
+'Formula to use is: =OFFSET(E1,0,0,COUNTA(E:E))
+'Where E1 is the start row of the data validation dropdown reference
+'E:E is the column the dropdown data is in. It will take the last row value of this column and 
+'push in all values between the first row and the last row as the data validation option
+
+'Sample VBA Code:
+With Cells(lTargRow, lTargCol).Validation
+    .Delete
+    .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:= _
+        xlBetween, Formula1:="=OFFSET(E1,0,0,COUNTA(E:E))"
+    .IgnoreBlank = True
+    .InCellDropdown = True
+    .InputTitle = ""
+    .ErrorTitle = ""
+    .InputMessage = ""
+    .ErrorMessage = ""
+    .ShowInput = True
+    .ShowError = True
+End With
