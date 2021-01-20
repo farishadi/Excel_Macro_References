@@ -10,8 +10,8 @@ aTestArr(1) = "TestString2"
 a = "TestString1"
 b = "UnrelatedString1"
 
-ArrayContainsReturnsTrue = Not IsError(Application.Application.WorksheetFunction.Match(a, aTestArr, 0))
-ArrayContainsReturnsFalse = Not IsError(Application.Application.WorksheetFunction.Match(b, aTestArr, 0))
+ArrayContainsReturnsTrue = Not IsError(Application.WorksheetFunction.Match(a, aTestArr, 0))
+ArrayContainsReturnsFalse = Not IsError(Application.WorksheetFunction.Match(b, aTestArr, 0))
 
 '---
 
