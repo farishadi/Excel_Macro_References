@@ -1,5 +1,7 @@
 Public Sub ArrayContains()
 
+'---
+
 'Checks if array contains variable (Exact match and Caps sensitive), returns True/False
 Dim aTestArr(0 To 1) As String
 aTestArr(0) = "TestString1"
@@ -8,14 +10,76 @@ aTestArr(1) = "TestString2"
 a = "TestString1"
 b = "UnrelatedString1"
 
-ArrayContainsReturnsTrue = Not IsError(Application.Match(a, aTestArr, 0))
-ArrayContainsReturnsFalse = Not IsError(Application.Match(b, aTestArr, 0))
+ArrayContainsReturnsTrue = Not IsError(Application.Application.WorksheetFunction.Match(a, aTestArr, 0))
+ArrayContainsReturnsFalse = Not IsError(Application.Application.WorksheetFunction.Match(b, aTestArr, 0))
+
+'---
 
 'match keys from one array to get value from another array
 Dim aTestArr2(0 To 1) As String
 aTestArr2(0) = "First value"
 aTestArr2(1) = "Second value"
 
+'this code returns the first value from aTestArr2 as the match returns index 0 from aTestArr
 ReturnsFirstValue = aTestArr2(Application.Match(a, aTestArr, 0) - 1)
+
+'---
+
+'normal match function does not accept multidimensional arrays, so for multidimensional arrays,
+'will need to slice array (with index function) into single dimensional values before matching
+'if we don't know which row/column the value is in, will have to loop while slicing and checking
+'for matches
+
+Dim aMultiDimTestArr(0 To 1, 0 To 2) As String
+aMultiDimTestArr(0, 0) = "TestString00"
+aMultiDimTestArr(0, 1) = "TestString01"
+aMultiDimTestArr(0, 2) = "TestString02"
+aMultiDimTestArr(1, 0) = "TestString10"
+aMultiDimTestArr(1, 1) = "TestString11"
+aMultiDimTestArr(1, 2) = "TestString12"
+
+a = "TestString00"
+b = "TestString1"
+
+'to slice array, use Application.WorksheetFunction.Index(array, rowToSlice, colToSlice) where
+'array          : can be an array or range reference (accepts multidimensional array values)
+'rowToSlice     : 0 if want to slice by columns, will return all values in rows. Else put row value + 1 from array index reference.
+'                 eg. if row array index = 0, rowToSlice needs to be 1 to return the same values
+'colToSlice     : 0 if want to slice by rows, will return all values in columns. Else put col value + 1 from array index reference.
+'                 eg. if col array index = 0, colToSlice needs to be 1 to return the same values
+'IMPORTANT NOTE : one of rowToSlice or colToSlice is necessary for slicing, if both = 0, will just return the entire array and the match will not work)
+'
+'reference 1 : https://stackoverflow.com/a/37486990
+'reference 2 : https://docs.microsoft.com/en-us/office/vba/api/excel.worksheetfunction.index
+
+returnsEntireMultiDimensionalArray = Application.Index(aMultiDimTestArr, 0, 0)
+returnsMultiDimensionalArraySlicedByColumn = Application.Index(aMultiDimTestArr, 0, 1)
+returnsMultiDimensionalArraySlicedByRow = Application.Index(aMultiDimTestArr, 1, 0)
+
+'so if we already know that the value is somewhere in row 0, can just use row = 1 in index row slice to get a match
+returnsValue = Application.Match(a, returnsMultiDimensionalArraySlicedByRow, 0)
+returnsError = Application.Match(b, returnsMultiDimensionalArraySlicedByRow, 0)
+
+'Otherwise, if we want to look through the entire multidimensional array to see if value exists, will have to loop
+'i controls looping through array columns (easier, more values potentially returned and better formatting)
+'loop begins from 1, not 0. Remember, we are looping to change the rowToSlice value, not looping through Array.
+resultFoundA = ""
+resultNotFoundB = ""
+For i = 1 To UBound(aMultiDimTestArr, 2)
+    'Match Index will keep erroring until value is found. When it is not an error, that means value is found and loop can be exited.
+    If Not IsError(Application.Match(a, Application.Index(aMultiDimTestArr, i, 0), 0)) Then
+        resultFoundA = "String found Array[" & i - 1 & "," & Application.Match("TestString01", Application.Index(aMultiDimTestArr, i, 0), 0) - 1 & "]"
+    End If
+    
+    'Match Index will keep erroring until value is found. When it is not an error, that means value is found and loop can be exited.
+    If Not IsError(Application.Match(b, Application.Index(aMultiDimTestArr, i, 0), 0)) Then
+        resultNotFoundB = "String found Array[" & i - 1 & "," & Application.Match("TestString01", Application.Index(aMultiDimTestArr, i, 0), 0) - 1 & "]"
+    End If
+    
+Next i
+
+MsgBox resultFoundA
+MsgBox resultNotFoundB
+
 
 End Sub
