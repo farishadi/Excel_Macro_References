@@ -1,0 +1,5 @@
+'This code toggles the queries and connections pane for a quick visual indicator on what queries are refreshing
+With Application.CommandBars("Queries and Connections")
+    .Visible = Not (.Visible)
+    .Width = 500
+End With
