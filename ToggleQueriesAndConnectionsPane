@@ -1,5 +1,13 @@
 'This code toggles the queries and connections pane for a quick visual indicator on what queries are refreshing
+Public Sub ToggleQueriesAndConnections()
+
+'invert display alert and screen updating suppressions
+Application.DisplayAlerts = Not (Application.DisplayAlerts)
+Application.ScreenUpdating = Not (Application.ScreenUpdating)
+
 With Application.CommandBars("Queries and Connections")
     .Visible = Not (.Visible)
     .Width = 500
 End With
+
+End Sub
