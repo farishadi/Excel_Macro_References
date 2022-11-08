@@ -7,6 +7,7 @@ Application.ScreenUpdating = Not (Application.ScreenUpdating)
 
 With Application.CommandBars("Queries and Connections")
     .Visible = Not (.Visible)
+    .Position = msoBarRight 'this line just keeps the command bar to the right, but is critical. Without this, the width line for some reason doesn't work.
     .Width = 500
 End With
 
