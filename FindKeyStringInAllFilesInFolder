@@ -1,0 +1,63 @@
+Public Sub FindKeyStringInAllFilesInFolder()
+
+'This sub will look at all files in a folder for the existence of a key string and list out all the locations where the string appears
+'Created for TEXT lookups: txt, VG2 files, etc.
+'Accepts String for Target Path and Target String to look for in all files
+'This sub will need the FindAllFilesInFolder function to work!
+
+Application.ScreenUpdating = False
+
+Dim sAllFilesInFolderName() As String
+Dim sTargPath As String
+Dim sFilePath As String
+Dim sTargetStr As String
+Dim sAllReadText As String
+Dim arrTextByLine() As String
+
+Dim i, j As Long
+Dim lLastRow As Long
+
+'Clear file from previous run
+lLastRow = Cells(Rows.Count, 1).End(xlUp).Row
+Range(Cells(2, 1), Cells(lLastRow, 3)).Clear
+
+'get the names of all of the files in the target folder
+sTargPath = Range("B5").Value 'can replace range with address directly here
+sAllFilesInFolderName = FindAllFilesInFolder(sTargPath)
+sTargetStr = Range("B6").Value 'can replace range with key word directly here
+
+'i loops through the file names found in directory
+For i = LBound(sAllFilesInFolderName) To UBound(sAllFilesInFolderName) - 1
+    
+    sFilePath = sTargPath & "\" & sAllFilesInFolderName(i)
+    
+    'open filepath, read text, close path
+    Open sFilePath For Binary As #1
+    sAllReadText = Space$(LOF(1))
+    Get #1, , sAllReadText
+    Close #1
+
+    'transfer string chunk to array, split by new line
+    arrTextByLine() = Split(sAllReadText, vbCrLf)
+    '~~> Now arrTextByLine has all the data from the text file
+    'vbCrLf splits at new line (similar to Enter)
+    'https://stackoverflow.com/questions/27223228/differences-between-vblf-vbcrlf-vbcr-constants
+
+    'j loops through all the lines of the data
+    For j = LBound(arrTextByLine) To UBound(arrTextByLine)
+        If InStr(1, arrTextByLine(j), sTargetStr, 1) <> 0 Then
+            lLastRow = Cells(Rows.Count, 1).End(xlUp).Row
+            Cells(lLastRow + 1, 1).Value = j
+            Cells(lLastRow + 1, 2).Value = sAllFilesInFolderName(i)
+            Cells(lLastRow + 1, 3).Value = arrTextByLine(j)
+        End If
+        Application.StatusBar = "Ln:" & j & "/" & UBound(arrTextByLine) & " File:" & i & "/" & UBound(sAllFilesInFolderName) - 1 & " " & sAllFilesInFolderName(i)
+        DoEvents
+    Next j
+Next i
+
+Application.ScreenUpdating = True
+
+MsgBox "Done!"
+
+End Sub
