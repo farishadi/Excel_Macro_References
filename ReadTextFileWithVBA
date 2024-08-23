@@ -1,0 +1,27 @@
+'This code reads the whole text file in one shot and can then parse the file line by line at your leisure.
+'Useful when trying to loop through multiple text files to get a keyword from one of them for example
+'Source: https://stackoverflow.com/questions/20128115/input-past-end-of-file-vba-excel
+
+'Code: 
+Sub Sample()
+    Dim MyData As String, strData() As String
+    Dim i As Long
+
+    '~~> Replace your file here
+    Open "C:\MyFile.Txt" For Binary As #1
+    MyData = Space$(LOF(1))
+    Get #1, , MyData
+    Close #1
+    strData() = Split(MyData, vbCrLf)
+
+    '
+    '~~> Now strData has all the data from the text file
+    '
+
+    For i = LBound(strData) To UBound(strData)
+        Debug.Print strData(i)
+        '
+        '~~> What ever you want here
+        '
+    Next i
+End Sub
